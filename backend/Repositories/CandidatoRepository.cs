@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
 using backend.Models;
+using backend.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories
@@ -15,8 +16,15 @@ namespace backend.Repositories
       this.context = context;
 
     }
-    public async Task AddCandidato(Candidato candidato)
+    public async Task AddCandidato(CandidatoNewDto candidatoNewDto)
     {
+      var candidato = new Candidato();
+      candidato.Digito = candidatoNewDto.Digito;
+      candidato.Legenda = candidatoNewDto.Legenda;
+      candidato.NomeCompleto = candidatoNewDto.NomeCompleto;
+      candidato.NomeVice = candidatoNewDto.NomeVice;
+      candidato.TipoCandidato = candidatoNewDto.TipoCandidato;
+      
       await context.Candidatos.AddAsync(candidato);
     }
 
