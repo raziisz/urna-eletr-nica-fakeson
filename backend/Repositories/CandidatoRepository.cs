@@ -23,6 +23,8 @@ namespace backend.Repositories
     public async Task DeleteCandidato(int id)
     {
       var candidato = await context.Candidatos.FirstOrDefaultAsync(x => !x.Deleted && x.Id == id);
+
+      candidato.Deleted = true;
     }
 
     public async Task<Candidato> GetCandidato(string digito)
@@ -33,7 +35,7 @@ namespace backend.Repositories
 
     public async Task<ICollection<Candidato>> GetCandidatos()
     {
-      var candidatos = await context.Candidatos.Where(x => !x.Deleted).ToListAsync();
+      var candidatos = await context.Candidatos.AsNoTracking().Where(x => !x.Deleted).ToListAsync();
 
       return candidatos;
     }

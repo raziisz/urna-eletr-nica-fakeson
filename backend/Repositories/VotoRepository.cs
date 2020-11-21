@@ -22,7 +22,7 @@ namespace backend.Repositories
 
     public async Task<ICollection<Voto>> GetVotos()
     {
-      var votos = await context.Votos.Where(x => !x.Deleted).ToListAsync();
+      var votos = await context.Votos.AsNoTracking().Where(x => !x.Deleted).ToListAsync();
       return votos;
     }
   }
