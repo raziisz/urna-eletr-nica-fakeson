@@ -12,7 +12,7 @@ namespace backend.Models
         public DateTime DataRegistro { get; set; }
         public string Legenda { get; set; }
         public short TipoCandidato { get; set; }
-        public bool Deleted { get; set; }
+        public bool Deleted { get; set; } = false;
         public List<Voto> VotosRecebidos { get; set; }
 
         public Candidato()
