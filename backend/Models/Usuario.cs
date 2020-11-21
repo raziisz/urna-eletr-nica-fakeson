@@ -11,7 +11,7 @@ namespace backend.Models
         public byte[] PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
-
+        public bool Deleted { get; set; }
         public Usuario()
         {
             CreatedAt = DateTime.Now;
