@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using backend.Helpers;
 using backend.Models.DTO;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,26 @@ namespace backend.Controllers
     {
       this.repo = repo;
       this.uof = uof;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index(CandidatesParams cp)
+    {
+      var candidates = await repo.GetCandidatos(cp);
+
+      Response.AddPagination(candidates.CurrentPage, candidates.PageSize, candidates.TotalCount, candidates.TotalPages);
+
+      return Ok(new { candidates });
+    }
+
+    [HttpGet("{digito}")]
+    public async Task<IActionResult> Show(string digito)
+    {
+      var candidate = await repo.GetCandidatoByDigito(digito);
+
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
+
+      return Ok(new { candidate });
     }
 
     [HttpPost("PostCandidate")]

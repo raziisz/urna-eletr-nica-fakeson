@@ -11,6 +11,7 @@ namespace backend.Controllers
 {
   [ApiController]
   [Route("api/v1/[controller]")]
+  [Authorize]
   public class VoteController : ControllerBase
   {
     private readonly IVotoRepository repo;
@@ -46,6 +47,8 @@ namespace backend.Controllers
     {
       var votes = await repo.GetVotos(vp);
       var nulls = await repo.GetCountVotosNulos();
+
+      Response.AddPagination(votes.CurrentPage, votes.PageSize, votes.TotalCount, votes.TotalPages);
 
       return Ok(new {
           votes,

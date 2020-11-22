@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using backend.Helpers;
 using backend.Models;
 using backend.Models.DTO;
 
@@ -12,6 +13,6 @@ namespace backend.Repositories
         Task DeleteCandidato(int id);
         Task<Candidato> GetCandidatoByDigito(string digito);
         Task<Candidato> GetCandidatoById(int id);
-        Task<ICollection<Candidato>> GetCandidatos();
+        Task<PagedList<Candidato>> GetCandidatos(CandidatesParams cp);
     }
 }

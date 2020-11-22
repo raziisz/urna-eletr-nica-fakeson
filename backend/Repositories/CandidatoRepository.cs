@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.Helpers;
 using backend.Models;
 using backend.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -47,11 +48,15 @@ namespace backend.Repositories
       return candidato;
     }
 
-    public async Task<ICollection<Candidato>> GetCandidatos()
+    public async Task<PagedList<Candidato>> GetCandidatos(CandidatesParams cp)
     {
-       var candidatos = await context.Candidatos.AsNoTracking().Where(x => !x.Deleted).ToListAsync();
+       var query =  context.Candidatos.Where(x => !x.Deleted).AsNoTracking().AsQueryable();
 
-      return candidatos;
+       if (cp.Type > 0) {
+         query = query.Where(x => x.TipoCandidato == cp.Type);
+       }
+
+      return await PagedList<Candidato>.CreateAsync(query, cp.PageNumber, cp.PageSize);
     }
 
     public async Task UpdateCandidato(int id, CandidatoNewDto updateCandidato)
