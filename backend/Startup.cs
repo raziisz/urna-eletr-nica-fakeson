@@ -31,22 +31,18 @@ namespace backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddNewtonsoftJson(o => 
+                {
+                    o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
             services.AddCors();
             services.AddDbContext<DataContext>(options =>
                 options
                 .UseLazyLoadingProxies()
                 .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
                     options => options.EnableRetryOnFailure()));
-
-            services.AddControllers()
-                .AddNewtonsoftJson(o => 
-                {
-                    o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
-            
-            services.AddHttpContextAccessor();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            
+ 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
             services.AddAuthentication(x =>
             {
@@ -65,16 +61,18 @@ namespace backend
                     ValidateAudience = false
                 };
             });
+            services.AddHttpContextAccessor();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ICandidatoRepository, CandidatoRepository>();
             services.AddScoped<IVotoRepository, VotoRepository>();
             services.AddScoped<IUsuariosRepository, UsuarioRepository>();
             services.AddTransient<IUnityOfWork, UnityOfWork>();
             services.AddTransient<Seed>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -97,11 +95,8 @@ namespace backend
             }
             
             app.UseRouting();
-
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            seeder.SeedUsuarioAdmin();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Helpers;
 using backend.Models.DTO;
@@ -24,11 +25,21 @@ namespace backend.Controllers
     [HttpGet]
     public async Task<IActionResult> Index(CandidatesParams cp)
     {
-      var candidates = await repo.GetCandidatos(cp);
+      var result = await repo.GetCandidatos(cp);
 
-      Response.AddPagination(candidates.CurrentPage, candidates.PageSize, candidates.TotalCount, candidates.TotalPages);
+      Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
 
-      return Ok(new { candidates });
+      var candidatos = result.Select(x => new CandidatoList
+      {
+        Id = x.Id,
+        Digito = x.Digito,
+        DataRegistro = x.DataRegistro,
+        Legenda = x.Legenda,
+        NomeCompleto = x.NomeCompleto,
+        NomeVice = x.NomeVice,
+        TipoCandidato = x.TipoCandidato
+      }).ToArray();
+      return Ok(new { candidatos });
     }
     [AllowAnonymous]
     [HttpGet("{digito}")]

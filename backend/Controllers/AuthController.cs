@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using backend.Models.DTO;
 using backend.Repositories;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +22,9 @@ namespace backend.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string email, string password)
+    public async Task<IActionResult> Login([FromBody] Login login)
     {
-        var user = await repo.Login(email, password);
+        var user = await repo.Login(login.Email, login.Password);
 
         if (user == null) return BadRequest(new { message = "Email ou senha inválida"});
 

@@ -16,7 +16,7 @@ namespace backend.Data
     public void SeedUsuarioAdmin()
     {
         if(!context.Usuarios.Any()) {
-            var userData = System.IO.File.ReadAllText("Data/UserAdminData.json");
+            var userData = System.IO.File.ReadAllText("Data/UserAdmin.json");
             var userNew = JsonConvert.DeserializeObject<UsuarioNewDto>(userData);
             
             byte[] passwordHash, passwordSalt;

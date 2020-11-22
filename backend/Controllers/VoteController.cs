@@ -51,7 +51,7 @@ namespace backend.Controllers
       Response.AddPagination(votes.CurrentPage, votes.PageSize, votes.TotalCount, votes.TotalPages);
 
       return Ok(new {
-          votes,
+          votes = votes.ToArray(),
           nulls
       });
     }
