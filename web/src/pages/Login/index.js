@@ -51,7 +51,7 @@ const Login = () => {
         <>
             <Loading  load={loading}/>
             <section className="container">
-                <h1>Painel Eleições 2020</h1>
+                <h1 className="mt-4">Painel Eleições 2020</h1>
                 <div className="row">
                     <form className="card p-4 mt-5 col-5" onSubmit={handleSubmit}> 
                         <h2 className="pl-3 pt-3">Veja os dados de cada candidato</h2>
