@@ -44,5 +44,21 @@ namespace backend.Controllers
 
       throw new Exception("Ocorreu um erro interno");
     }
+
+    [HttpPut("EditCandidate/{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CandidatoNewDto candidatoUpdate)
+    {
+      var candidate = await repo.GetCandidatoById(id);
+
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
+      if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!"});
+
+      await repo.UpdateCandidato(id, candidatoUpdate);
+
+      if (await uof.Commit()) return NoContent();
+
+      throw new Exception("Ocorreu um erro interno");
+
+    }
   }
 }

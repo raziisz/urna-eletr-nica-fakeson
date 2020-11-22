@@ -8,6 +8,7 @@ namespace backend.Repositories
     public interface ICandidatoRepository
     {
         Task AddCandidato(CandidatoNewDto candidatoNewDto);
+        Task UpdateCandidato(int id, CandidatoNewDto updateCandidato);
         Task DeleteCandidato(int id);
         Task<Candidato> GetCandidatoByDigito(string digito);
         Task<Candidato> GetCandidatoById(int id);
