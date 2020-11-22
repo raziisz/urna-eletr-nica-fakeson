@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using backend.Models.DTO;
 using backend.Repositories;
@@ -28,6 +29,20 @@ namespace backend.Controllers
             return Ok(new { message = "Candidato salvo com sucesso."});
         
         return StatusCode(500, new { message = "Ocorreu um erro interno no servidor!"});
+    }
+
+    [HttpDelete("DeleteCandidate/{id}")]
+    public async Task<IActionResult> Destroy(int id)
+    {
+      var candidate = await repo.GetCandidatoById(id);
+
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
+
+      await repo.DeleteCandidato(id);
+
+      if (await uof.Commit()) return NoContent();
+
+      throw new Exception("Ocorreu um erro interno");
     }
   }
 }

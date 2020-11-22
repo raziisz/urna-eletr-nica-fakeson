@@ -9,7 +9,8 @@ namespace backend.Repositories
     {
         Task AddCandidato(CandidatoNewDto candidatoNewDto);
         Task DeleteCandidato(int id);
-        Task<Candidato> GetCandidato(string digito);
+        Task<Candidato> GetCandidatoByDigito(string digito);
+        Task<Candidato> GetCandidatoById(int id);
         Task<ICollection<Candidato>> GetCandidatos();
     }
 }

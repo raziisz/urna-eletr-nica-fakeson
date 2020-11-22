@@ -35,9 +35,15 @@ namespace backend.Repositories
       candidato.Deleted = true;
     }
 
-    public async Task<Candidato> GetCandidato(string digito)
+    public async Task<Candidato> GetCandidatoByDigito(string digito)
     {
       var candidato = await context.Candidatos.FirstOrDefaultAsync(x => !x.Deleted && x.Digito == digito);
+      return candidato;
+    }
+
+    public async Task<Candidato> GetCandidatoById(int id)
+    {
+      var candidato = await context.Candidatos.FirstOrDefaultAsync(x => !x.Deleted && x.Id == id);
       return candidato;
     }
 
