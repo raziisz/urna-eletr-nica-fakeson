@@ -32,7 +32,9 @@ namespace backend.Controllers
       var ip = accessor.HttpContext.Connection.RemoteIpAddress.ToString();
       string ipReplace = ip.Replace("::ffff:", "");
 
-      voto.CodigoVotacaoCidadao = $"{dateActual.ToString("yyyyMMdd")}{ipReplace.Trim()}";
+      var codigoCidadao = $"{dateActual.ToString("yyyyMMdd")}{ipReplace.Trim()}";
+      
+      voto.CodigoVotacaoCidadao = Utils.CreateMD5(codigoCidadao);
       voto.DataVotacao = dateActual;
 
       await repo.AddVoto(voto);

@@ -40,7 +40,7 @@ namespace backend.Repositories
 
     public async  Task<int> GetCountVotosNulos()
     {
-      var votesNull = await context.Votos.Where(x => !x.Deleted && x.IdCandidato == null).ToListAsync();
+      var votesNull = await context.Votos.Where(x => !x.Deleted && x.CandidatoId == null).ToListAsync();
       return votesNull.Count;
     }
   }
