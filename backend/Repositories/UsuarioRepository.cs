@@ -31,7 +31,7 @@ namespace backend.Repositories
 
     public async Task<Usuario> GetUsuario(string email)
     {
-      var usuario = await context.Usuarios.FirstOrDefaultAsync(x => x.Email == email);
+      var usuario = await context.Usuarios.FirstOrDefaultAsync(x => x.Email == email && !x.Deleted);
 
       return usuario;
     }

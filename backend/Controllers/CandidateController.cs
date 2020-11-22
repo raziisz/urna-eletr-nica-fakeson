@@ -30,7 +30,7 @@ namespace backend.Controllers
 
       return Ok(new { candidates });
     }
-
+    [AllowAnonymous]
     [HttpGet("{digito}")]
     public async Task<IActionResult> Show(string digito)
     {
