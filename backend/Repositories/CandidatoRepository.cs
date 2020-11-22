@@ -49,7 +49,7 @@ namespace backend.Repositories
 
     public async Task<ICollection<Candidato>> GetCandidatos()
     {
-      var candidatos = await context.Candidatos.AsNoTracking().Where(x => !x.Deleted).ToListAsync();
+       var candidatos = await context.Candidatos.AsNoTracking().Where(x => !x.Deleted).ToListAsync();
 
       return candidatos;
     }

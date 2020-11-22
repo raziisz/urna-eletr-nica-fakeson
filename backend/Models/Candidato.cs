@@ -13,7 +13,7 @@ namespace backend.Models
         public string Legenda { get; set; }
         public short TipoCandidato { get; set; }
         public bool Deleted { get; set; } = false;
-        public List<Voto> VotosRecebidos { get; set; }
+        public virtual ICollection<Voto> VotosRecebidos { get; set; }
 
         public Candidato()
         {

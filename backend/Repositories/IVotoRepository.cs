@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using backend.Helpers;
 using backend.Models;
 
 namespace backend.Repositories
@@ -7,6 +8,7 @@ namespace backend.Repositories
     public interface IVotoRepository
     {
         Task AddVoto(Voto voto);
-        Task<ICollection<Voto>> GetVotos();
+        Task<PagedList<Candidato>> GetVotos(VotesParams vp);
+        Task<int> GetCountVotosNulos();
     }
 }
