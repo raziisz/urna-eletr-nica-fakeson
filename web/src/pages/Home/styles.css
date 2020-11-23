@@ -53,9 +53,14 @@
   margin: 0;
 }
 
-.content .card .info p{
+.content .card .info {
+  display:flex;
+  flex-direction: column;
+}
+
+.content .card .info p {
   color: black;
-  margin: 0
+  margin: 0;
 }
 
 
