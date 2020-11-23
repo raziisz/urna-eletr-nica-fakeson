@@ -14,6 +14,40 @@
   margin-top: 25px;
 }
 
+.content .card {
+  max-height: 825px;
+}
+.content .card .image-candidate {
+  position: absolute;
+  width: 180px;
+  height: 140px;
+  align-self: flex-end;
+  top: -50
+}
+
+.content .card .image-candidate img {
+  width: 100%;
+  height: 100%;
+}
+.content .card .image-candidate h5 {
+  align-self: center;
+}
+.content .card .image-vice {
+  position: absolute;
+  width: 140px;
+  height: 100px;
+  align-self: flex-end;
+  top: 200px;
+}
+
+.content .card .image-vice img {
+  width: 100%;
+  height: 100%;
+}
+.content .card .image-vice h5 {
+  align-self: center;
+}
+
 .urna {
   display: flex;
   flex-direction: column;

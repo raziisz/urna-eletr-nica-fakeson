@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import PrefeitoContainer from './PrefeitoContainer';
 import './styles.css'
-import InputUrna from 'components/InputUrna';
+
 
 const Home = () => {
   const [step, setStep] = useState(1);
   const [error, setError] = useState(false);
+  const [complement, setComplement] = useState(false);
   const [valuesMayor, setValuesMayor] = useState(["",""]);
+  const digitMayor1 = useRef(null);
+  const digitMayor2 = useRef(null);
 
-  const handleValueMayor = (e) => {
-    
-  }
+  const handleValueMayor = useCallback((name ,value) => {
+    if (name === "1") {
+      setValuesMayor(prev => [value, prev[1]]);
+
+      if (value) {
+        digitMayor2.current.focus();
+      }
+    } else if (name === "2") {
+      setValuesMayor(prev => [prev[0], value]);
+      console.log(digitMayor1.current.value,digitMayor2.current.value)
+      if (digitMayor1.current.value == 1 && digitMayor2.current.value == 2) {
+        setComplement(prev => !prev);
+      }
+    }
+  }, [digitMayor1, digitMayor2])
   return (
     <>
     {step === 0 &&
@@ -20,22 +36,14 @@ const Home = () => {
       </div>
     }
     {step === 1 &&
-      <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
-        <div className="card w-50 h-50">
-          <div className="card-body d-flex flex-column">
-            <h4>Meu voto para</h4>
-            <h2 className="mt-2 align-self-center">PREFEITO(A)</h2>
-            <form>
-              <div className="form-group row mt-3">
-                <label htmlFor="" className="col-sm-2 col-form-label">Números:</label>
-                <InputUrna type="text" required />
-                <InputUrna type="text" required />
-              </div>
-             {error && <p className="error">NÚMERO INVÁLIDO</p>}
-            </form>
-          </div>
-        </div>
-      </div>
+      <PrefeitoContainer 
+        onChange={handleValueMayor} 
+        complement={complement} 
+        error={error}
+        values={valuesMayor}
+        ref1={digitMayor1}
+        ref2={digitMayor2}
+      />
     }
     </>
    
