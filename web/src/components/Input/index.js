@@ -8,12 +8,14 @@ export default ({
   value="", 
   required=false, 
   maxLength,
-  name
+  name,
+  accept = "",
+  classList="" 
 }) => {
   return (
       <div className="form-group">
         <label htmlFor={name}>{label}</label>
-        <input onChange={onChange} type={type} className="form-control" placeholder={placeholder} name={name} value={value} required={required} maxLength={maxLength}/>
+        <input onChange={onChange} type={type} className={classList} placeholder={placeholder} name={name} value={value} required={required} maxLength={maxLength} accept={accept}/>
       </div>
     )
 }

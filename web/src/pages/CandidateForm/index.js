@@ -103,7 +103,8 @@ const CandidateForm = () => {
             <FiArrowLeft />
             Voltar para painel
           </Link>
-          <InputText 
+          <InputText
+            classList="form-control" 
             label="Nome do completo" 
             type="text"
             onChange={e => handleChange(e)}
@@ -112,6 +113,7 @@ const CandidateForm = () => {
             value={values.nomeCompleto}
           />
           <InputText 
+            classList="form-control" 
             label="Legenda" 
             type="text"
             onChange={e => handleChange(e)}
@@ -119,7 +121,8 @@ const CandidateForm = () => {
             name="legenda"
             required
           />
-          <SelectInput 
+          <SelectInput
+            classList="form-control"  
             label="Tipo de candidato" 
             onChange={e => handleChange(e)}
             value={values.tipoCandidato}
@@ -129,7 +132,8 @@ const CandidateForm = () => {
           />
           {
             values.tipoCandidato == 1 &&
-              <InputText 
+              <InputText
+                classList="form-control"  
                 label="Nome do vice"
                 type="text"
                 onChange={e => handleChange(e)}
@@ -137,7 +141,8 @@ const CandidateForm = () => {
                 name="nomeVice"
               />
           }
-          <InputText 
+          <InputText
+            classList="form-control"  
             label="Dígito" 
             type="text"
             onChange={e => handleChange(e)}
@@ -146,21 +151,25 @@ const CandidateForm = () => {
             maxLength={values.tipoCandidato == 1 ? 2 : 5}
             name="digito"
           />
-          <InputText 
+          <InputText
+            classList="form-control-file"  
             label="Foto candidato" 
             type="file"
             onChange={e => handleChange(e)}
             value={fotoCandidato}
             name="fotoCandidato"
+            accept="image/*"
           />
            {
             values.tipoCandidato == 1 &&
-              <InputText 
+              <InputText
+                classList="form-control-file" 
                 label="Foto do vice"
                 type="file"
                 onChange={e => handleChange(e)}
                 value={fotoVice}
                 name="fotoVice"
+                accept="image/*"
               />
           }
           <div className="buttons">
