@@ -31,10 +31,20 @@
 }
 
 #page-admin main div .select-input label{
-  width: 250px;
+  width: 170px;
+  display: block;
   margin: auto;
 }
 
 #page-admin main div .select-input select {
-  margin-left: 10px;
+  width: 150px;
+}
+
+#page-admin main .row .title-span {
+  font-weight: bold;
+  color: #333;
+}
+#page-admin main .row .text-span {
+  font-weight: 500;
+  color: #333;
 }

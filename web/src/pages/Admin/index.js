@@ -2,6 +2,7 @@ import React from 'react';
 import Jessy from 'assets/images/jessy.jpg';
 import { FiEdit, FiTrash, FiPlusCircle } from 'react-icons/fi';
 import { Pagination } from '@material-ui/lab';
+import { Modal } from '@material-ui/core';
 import './styles.css';
 
 
@@ -13,8 +14,8 @@ export default () => {
         <div className="d-flex d-flex justify-content-between mb-3">
           <div className="select-input">
             <label htmlFor="type">Tipo de candidatura: </label>
-            <select value="" name="type" className="form-control ">
-              <option value="" disabled hidden>Selecione um...</option>
+            <select value="0" name="type" className="form-control ">
+              <option value="0">TODOS</option>
               <option value="1">PREFEITO</option>
               <option value="2">VEREADOR</option>
             </select>
@@ -133,7 +134,7 @@ export default () => {
           </div>
           <div className="col-sm-3">
             <div className="d-flex flex-column justify-content-center align-items-center">
-              <span>Ações</span>
+              <span className="title-span">Ações</span>
               <div className="btn-group btn-group-sm">
                 <button className="btn btn-secondary">
                   <FiEdit />
