@@ -6,7 +6,7 @@ import ConfirmSound from 'assets/sounds/confirmar.mp3';
 
 
 const Home = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [error, setError] = useState(false);
   const [complement, setComplement] = useState(false);
   const [valuesMayor, setValuesMayor] = useState(["",""]);
@@ -92,14 +92,19 @@ const Home = () => {
       setValuesMayor(["",""]);
       digitMayor1.current.focus();
     }
-  }, [digitMayor1]);
+    if (type === 'vereador') {
+      setComplement(false);
+      setValuesVereador(["","", "", "", ""]);
+      digitVereador1.current.focus();
+    }
+  }, [digitMayor1, digitVereador1]);
   return (
     <>
     {step === 0 &&
       <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
         <h1>Seja bem vindo cidadão.</h1>
         <p>Seja inteligente vote consciente!</p>
-        <button className="btn btn-primary">Iniciar</button>
+        <button className="btn btn-primary" onClick={() => setStep(prev => prev+1)}>Iniciar</button>
       </div>
     }
     {step === 1 &&
@@ -128,8 +133,20 @@ const Home = () => {
          ref5={digitVereador5}
          confirm={handleConfirm}
          correction={handleCorrection}
+         values={valuesVereador}
         
         />
+    }
+    {
+      step === 3 &&
+        <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
+          <div className="card">
+            <div className="card-body">
+              <h1 className="title-end">FIM</h1>
+            </div>
+          </div>
+          <button className="btn btn-secondary mt-3" onClick={() => setStep(0)}>RENICIAR</button>
+        </div>
     }
       <audio src={ConfirmSound} preload="auto" ref={confirmRef}></audio>
     </>
