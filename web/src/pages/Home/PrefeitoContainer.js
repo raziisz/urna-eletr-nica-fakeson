@@ -1,5 +1,6 @@
 import React from 'react';
 import InputUrna from 'components/InputUrna';
+import ButtonsUrna from 'components/ButtonsUrna';
 import './styles.css';
 import Jessy from 'assets/images/jessy.jpg';
 
@@ -46,6 +47,18 @@ const PrefeitoContainer = ({
                   <label className="col-sm-3">Vice-Prefeito(a):</label>
                   <label className="col-sm-4">Nome Vice prefeita</label>
                 </div>
+                <hr/>
+                <div className="info row">
+                  <p>Aperte no botão:</p>
+                  <p >
+                    <strong>CONFIRMAR</strong> para <strong>CONFIRMAR</strong> este voto
+                  </p>
+                  <p>
+                    <strong>CORRIGE</strong> para <strong>RENICIAR</strong> este voto
+                  </p>
+                </div>
+                <ButtonsUrna />
+
               </>
              }
           </div>

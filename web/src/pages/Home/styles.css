@@ -48,6 +48,17 @@
   align-self: center;
 }
 
+.content .card hr {
+  background-color: black;
+  margin: 0;
+}
+
+.content .card .info p{
+  color: black;
+  margin: 0
+}
+
+
 .urna {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,32 @@
+.group-buttons {
+  align-self: flex-end;
+  display: flex;
+  justify-content: baseline;
+  align-items: baseline;
+  margin-top: 10px;
+}
+
+.group-buttons .button-white {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  width: 100px;
+  height: 50px;
+  align-self: baseline;
+}
+.group-buttons .button-red {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  background-color: #d32709;
+  height: 50px;
+  align-self: baseline;
+}
+.group-buttons .button-green {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  height: 75px;
+
+  background-color: #108a00;
+}
