@@ -47,7 +47,7 @@ const CandidateForm = () => {
     }
 
     try {
-      const response = await api.post('candidate/PostCandidate', data, {
+      const response = await api.post('candidate/PostCandidate', formData, {
         headers: {
           ContentType: 'multipart/form-data'
         }
@@ -150,7 +150,7 @@ const CandidateForm = () => {
             label="Foto candidato" 
             type="file"
             onChange={e => handleChange(e)}
-            value={values.fotoCandidato}
+            value={fotoCandidato}
             name="fotoCandidato"
           />
            {
@@ -159,7 +159,7 @@ const CandidateForm = () => {
                 label="Foto do vice"
                 type="file"
                 onChange={e => handleChange(e)}
-                value={values.fotoVice}
+                value={fotoVice}
                 name="fotoVice"
               />
           }

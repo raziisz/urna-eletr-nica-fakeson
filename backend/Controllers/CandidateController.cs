@@ -5,6 +5,7 @@ using backend.Helpers;
 using backend.Models.DTO;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -16,8 +17,10 @@ namespace backend.Controllers
   {
     private readonly IUnityOfWork uof;
     private readonly ICandidatoRepository repo;
-    public CandidateController(ICandidatoRepository repo, IUnityOfWork uof)
+    private readonly IWebHostEnvironment environment;
+    public CandidateController(ICandidatoRepository repo, IUnityOfWork uof, IWebHostEnvironment environment)
     {
+      this.environment = environment;
       this.repo = repo;
       this.uof = uof;
     }
@@ -47,20 +50,37 @@ namespace backend.Controllers
     {
       var candidate = await repo.GetCandidatoByDigito(digito);
 
-      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
 
       return Ok(new { candidate });
     }
 
     [HttpPost("PostCandidate")]
-    public async Task<IActionResult> Store(CandidatoNewDto candidatoNewDto)
+    public async Task<IActionResult> Store([FromForm] CandidatoNewDto candidatoNewDto)
     {
-        await repo.AddCandidato(candidatoNewDto);
+      var candidate = await repo.GetCandidatoByDigito(candidatoNewDto.Digito);
 
-        if (await uof.Commit()) 
-            return Ok(new { message = "Candidato salvo com sucesso."});
+      if (candidate != null) return BadRequest(new { message = "Já existe um candidato com este dígito!" });
+
+      await repo.AddCandidato(candidatoNewDto);
+
+      if (await uof.Commit())
+      {
+        var webRootPath = environment.WebRootPath;
+        var filenameCandidate = $"{candidatoNewDto.Digito}_{candidatoNewDto.NomeCompleto.Replace(" ", "")}";
         
-        return StatusCode(500, new { message = "Ocorreu um erro interno no servidor!"});
+        if (candidatoNewDto.TipoCandidato == 1) {
+          var filenameVice = $"{candidatoNewDto.Digito}_{candidatoNewDto.NomeVice.Replace(" ", "")}";
+          await Utils.SaveFile(candidatoNewDto.FotoCandidato, filenameVice, webRootPath);
+
+        }
+        
+        await Utils.SaveFile(candidatoNewDto.FotoCandidato, filenameCandidate, webRootPath);
+        
+        return Ok(new { message = "Candidato salvo com sucesso." });
+      }
+
+      return StatusCode(500, new { message = "Ocorreu um erro interno no servidor!" });
     }
 
     [HttpDelete("DeleteCandidate/{id}")]
@@ -68,7 +88,7 @@ namespace backend.Controllers
     {
       var candidate = await repo.GetCandidatoById(id);
 
-      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
 
       await repo.DeleteCandidato(id);
 
@@ -82,8 +102,8 @@ namespace backend.Controllers
     {
       var candidate = await repo.GetCandidatoById(id);
 
-      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!"});
-      if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!"});
+      if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
+      if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!" });
 
       await repo.UpdateCandidato(id, candidatoUpdate);
 

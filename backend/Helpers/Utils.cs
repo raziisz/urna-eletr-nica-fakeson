@@ -1,5 +1,10 @@
+using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace backend.Helpers
 {
@@ -21,6 +26,30 @@ namespace backend.Helpers
         }
         return sb.ToString();
       }
+    }
+
+    public static async Task SaveFile(IFormFile file, string nameFile, string webRootPath) {
+      
+      string folderName = @"images";
+      string filename = $"${nameFile}_{DateTime.Now.Millisecond.ToString()}";
+
+      if (file == null || file.Length == 0) return;
+
+      if (file.FileName.Contains(".jpg"))
+          filename += ".jpg";
+      else if (file.FileName.Contains(".gif"))
+          filename += ".gif";
+      else if (file.FileName.Contains(".png"))
+          filename += ".png";
+      else
+          filename += ".tmp";
+        
+     string finalDestinyFile = $@"{webRootPath}/{folderName}/{filename}";
+     
+      using (var stream = new FileStream(finalDestinyFile, FileMode.Create))
+      {
+          await file.CopyToAsync(stream);
+      }  
     }
   }
 }
