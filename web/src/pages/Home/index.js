@@ -3,14 +3,15 @@ import PrefeitoContainer from './PrefeitoContainer';
 import VereadorContainer from './VereadorContainer';
 import './styles.css'
 import ConfirmSound from 'assets/sounds/confirmar.mp3';
+import Logo from 'assets/images/logo_eleicao.png';
 
 
 const Home = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [complement, setComplement] = useState(false);
   const [valuesMayor, setValuesMayor] = useState(["",""]);
-  const [valuesVereador, setValuesVereador] = useState(["","","","", ""])
+  const [valuesVereador, setValuesVereador] = useState(["","","","",""])
   
   //refs mayor
   const digitMayor1 = useRef(null);
@@ -102,6 +103,7 @@ const Home = () => {
     <>
     {step === 0 &&
       <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
+        <img src={Logo} alt="Eleições 2020" className="logo"/>
         <h1>Seja bem vindo cidadão.</h1>
         <p>Seja inteligente vote consciente!</p>
         <button className="btn btn-primary" onClick={() => setStep(prev => prev+1)}>Iniciar</button>

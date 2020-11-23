@@ -4,7 +4,7 @@ export const isAuthenticated = () => {
   const authenticated = localStorage.getItem('token_key') !== null;
 
   if(!authenticated) {
-      toast.error('Você precisa se autenticar');
+      toast.error('Você não tem permissão para acessar está página.');
       return false;
   }
 
