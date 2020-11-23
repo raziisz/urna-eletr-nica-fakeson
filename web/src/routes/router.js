@@ -5,6 +5,7 @@ import PrivateRouter from './PrivateRouter';
 import Login from 'pages/Login';
 import Home from 'pages/Home';
 import Admin from 'pages/Admin';
+import CandidateForm from 'pages/CandidateForm';
 
 export default function Routes() {
     return (
@@ -12,7 +13,8 @@ export default function Routes() {
           <Switch>
             <Route path="/" exact component={Home}/>
             <Route path="/login" component={Login} />
-            <Route path="/admin" component={Admin} />
+            <Route path="/admin" exact component={Admin} />
+            <Route path="/admin/candidate" component={CandidateForm} />
             <Route path='*' exact component={() => <h1>Página não encontrada.</h1>} />
           </Switch>
         </BrowserRouter>

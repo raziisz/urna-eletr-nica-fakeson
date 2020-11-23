@@ -10,9 +10,20 @@ import Loading from 'components/Loading';
 import InputText from 'components/Input';
 import SelectInput from 'components/Select';
 
+const initialValuesCandidate = {
+  legenda: "",
+  tipoCandidato: "",
+  nomeVice: "",
+  digito: "",
+  nomeCompleto: ""
+}
+
 const CandidateForm = () => {
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState(initialValuesCandidate);
   const [loading, setLoading] = useState(false);
+  const [fotoCandidato, setFotoCandidato] = useState('');
+  const [fotoVice, setFotoVice] = useState('');
+  
   const history = useHistory();
 
 
@@ -24,26 +35,23 @@ const CandidateForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (values.password !== values.confirmPassword) {
-      toast.error('Senhas divergentes.');
-      setLoading(false);
-      return;
-    }
-
-    const data = {
-      nome: values.nome,
-      sobrenome: values.sobrenome,
-      email: values.email,
-      password: values.password,
-      endereco: values.endereco,
-      CEP: values.cep,
-      numero: values.numero,
-      cidade: values.cidade,
-      estado: values.estado
+    let formData = new FormData();
+    formData.append('nomeCompleto', values.nomeCompleto);
+    formData.append('legenda', values.legenda);
+    formData.append('tipoCandidato', values.tipoCandidato);
+    formData.append('digito', values.digito);
+    formData.append('fotoCandidato', fotoCandidato);
+    if (values.tipoCandidato == 1) {
+      formData.append('fotoVice', fotoVice);
+      formData.append('nomeVice', values.nomeVice);
     }
 
     try {
-      const response = await api.post('users/CandidateForm', data);
+      const response = await api.post('candidate/PostCandidate', data, {
+        headers: {
+          ContentType: 'multipart/form-data'
+        }
+      });
 
       if (response.status === 200) {
         toast.info(response.data.message);
@@ -67,9 +75,20 @@ const CandidateForm = () => {
   }
 
   const handleChange = useCallback((e) => {
-    const {name, value} = e.target;
+    let {name, value, files} = e.target;
 
-    setValues(prev => ({...prev, [name]: value}));
+    if (name === 'fotoCandidato') {
+      setFotoCandidato(files[0])
+    } else if (name === 'fotoVice') {
+      setFotoVice(files[0])
+    } else if (name === 'digito') {
+      let regex = /[^0-9]/g;
+      let newValue = value.replace(regex, "");
+      setValues(prev => ({...prev, [name]: newValue}));
+    } else {
+      setValues(prev => ({...prev, [name]: value}));
+    }
+
   }, [])
   return (
     <>
@@ -77,17 +96,17 @@ const CandidateForm = () => {
       <main className="container-fluid">
         <h3 className="mt-3 title">Cadastro de Candidato </h3>
         <p className="text-info">
-          Verifique cada campo com os dados digitados antes do cadastro.
+          Verifique cada campo com os dados digitados antes de salvar.
         </p>
-        <form className="form-new card mt-3 py-3 px-5 row" onSubmit={handleSubmit}>
-          <Link to="/">
+        <form className="card mt-3 py-3 px-5 row" onSubmit={handleSubmit}>
+          <Link to="/admin" className="mb-3">
             <FiArrowLeft />
-            Voltar para Dash
+            Voltar para painel
           </Link>
           <InputText 
             label="Nome do completo" 
             type="text"
-            onChange={handleChange}
+            onChange={e => handleChange(e)}
             required
             name="nomeCompleto"
             value={values.nomeCompleto}
@@ -95,24 +114,25 @@ const CandidateForm = () => {
           <InputText 
             label="Legenda" 
             type="text"
-            onChange={handleChange}
+            onChange={e => handleChange(e)}
             value={values.legenda}
             name="legenda"
             required
           />
           <SelectInput 
             label="Tipo de candidato" 
-            onChange={handleChange}
+            onChange={e => handleChange(e)}
             value={values.tipoCandidato}
             options={[{label: 'Prefeito', value: 1}, {label: 'Vereador', value: 2}]}
             required
+            name="tipoCandidato"
           />
           {
-            values.tipoCandidato === 1 &&
+            values.tipoCandidato == 1 &&
               <InputText 
                 label="Nome do vice"
                 type="text"
-                onChange={handleChange}
+                onChange={e => handleChange(e)}
                 value={values.nomeVice}
                 name="nomeVice"
               />
@@ -120,32 +140,32 @@ const CandidateForm = () => {
           <InputText 
             label="Dígito" 
             type="text"
-            onChange={handleChange}
+            onChange={e => handleChange(e)}
             value={values.digito}
             required
-            maxLength={values.digito === 1 ? 2 : 5}
+            maxLength={values.tipoCandidato == 1 ? 2 : 5}
             name="digito"
           />
           <InputText 
             label="Foto candidato" 
             type="file"
-            onChange={handleChange}
+            onChange={e => handleChange(e)}
             value={values.fotoCandidato}
             name="fotoCandidato"
           />
            {
-            values.tipoCandidato === 1 &&
+            values.tipoCandidato == 1 &&
               <InputText 
                 label="Foto do vice"
                 type="file"
-                onChange={handleChange}
+                onChange={e => handleChange(e)}
                 value={values.fotoVice}
                 name="fotoVice"
               />
           }
           <div className="buttons">
             <button className="btn btn-secondary" type="button" onClick={clearForm}>Limpar campos</button>
-            <button className="btn btn-primary" type="submit">Salvar</button>
+            <button className="btn btn-primary mr-2" type="submit">Salvar</button>
           </div>
         </form>
       </main>

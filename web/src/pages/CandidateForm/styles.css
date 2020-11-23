@@ -1,0 +1,16 @@
+main.container-fluid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main.container-fluid .title {
+  color: #333;
+
+}
+
+main.container-fluid .buttons {
+  display: flex;
+  flex-direction: row-reverse;
+}
