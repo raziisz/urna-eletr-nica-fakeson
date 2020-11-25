@@ -9,6 +9,8 @@ namespace backend.Models.DTO
         public string NomeCompleto { get; set; }
         public string NomeVice { get; set; }
         public DateTime DataRegistro { get; set; }
+        public string UrlFotoCandidato { get; set; }
+        public string UrlFotoVice { get; set; }
         public string Legenda { get; set; }
         public short TipoCandidato { get; set; }
     }

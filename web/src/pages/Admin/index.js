@@ -1,14 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Jessy from 'assets/images/jessy.jpg';
+
 import { FiEdit, FiTrash, FiPlusCircle } from 'react-icons/fi';
 import { Pagination } from '@material-ui/lab';
-import { Modal } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import Loading from 'components/Loading';
+import CandidateItem from 'components/CandidateItem';
+
 import './styles.css';
+import api from 'services/api';
 
 
 export default () => {
+  const history = useHistory();
+  const [candidates, setCandidates] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+
+    setLoading(prev => !prev);
+    api.get('/candidate')
+      .then(response => response.data)
+      .then(data => setCandidates(data.candidatos))
+      .catch(error => {
+        if (error.response) {
+          if (error.response.status === 400) {
+              toast.error(error.response.data.message);
+          } else if (error.response.status === 500) {
+              toast.error(error.response.data.message);
+          }
+        } else {
+            toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
+        }
+      });
+
+    setLoading(false);
+
+  }, [])
+  
+  const handleAdd = () => {
+    history.push('/admin/candidate');
+  }
   return (
     <div id="page-admin" className="container">
+      <Loading load={loading}/>
       <main>
         <h3 className="title-admin">Painel administrativo - ELEIÇÕES 2020</h3>
         <div className="d-flex d-flex justify-content-between mb-3">
@@ -20,136 +57,20 @@ export default () => {
               <option value="2">VEREADOR</option>
             </select>
           </div>
-          <button className="btn btn-sm btn-primary">
+          <button className="btn btn-sm btn-primary" onClick={handleAdd}>
             <FiPlusCircle />
           </button>
         </div>
-        <div className="row mt-2 mb-2">
-          <div className="col-sm-1">
-            <img src={Jessy} alt="Amorzão"/>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-                <span className="title-span">Nome Completo:</span>
-                <span className="text-span">Geciene Colares</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Tipo de candidatura:</span>
-                <span className="text-span">Prefeito</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Nome do Vice:</span>
-                <span className="text-span">Felipe Libertinni</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Legenda:</span>
-               <span className="text-span">Juntos podemos!</span>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <span>Ações</span>
-              <div className="btn-group btn-group-sm">
-                <button className="btn btn-secondary">
-                  <FiEdit />
-                </button>
-                <button className="btn btn-danger">
-                  <FiTrash />
-                </button>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row mt-2 mb-2">
-          <div className="col-sm-1">
-            <img src={Jessy} alt="Amorzão"/>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-                <span className="title-span">Nome Completo:</span>
-                <span className="text-span">Geciene Colares</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Tipo de candidatura:</span>
-                <span className="text-span">Vereador</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Legenda:</span>
-               <span className="text-span">Juntos podemos!</span>
-            </div>
-          </div>
-          <div className="col-sm-3 offset-sm-2">
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <span>Ações</span>
-              <div className="btn-group btn-group-sm">
-                <button className="btn btn-secondary">
-                  <FiEdit />
-                </button>
-                <button className="btn btn-danger">
-                  <FiTrash />
-                </button>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row mt-2 mb-2">
-          <div className="col-sm-1">
-            <img src={Jessy} alt="Amorzão"/>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-                <span className="title-span">Nome Completo:</span>
-                <span className="text-span">Geciene Colares</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Tipo de candidatura:</span>
-                <span className="text-span">Prefeito</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Nome do Vice:</span>
-                <span className="text-span">Felipe Libertinni</span>
-            </div>
-          </div>
-          <div className="col-sm-2">
-            <div className="d-flex flex-column">
-            <span className="title-span">Legenda:</span>
-               <span className="text-span">Juntos podemos!</span>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <span className="title-span">Ações</span>
-              <div className="btn-group btn-group-sm">
-                <button className="btn btn-secondary">
-                  <FiEdit />
-                </button>
-                <button className="btn btn-danger">
-                  <FiTrash />
-                </button>
-                
-              </div>
-            </div>
-          </div>
-        </div>
+       { candidates.length > 0 ? (candidates.map(x => (
+         <CandidateItem data={x} key={x.id}/>
+       ))) : 
+        (<div className="row mt-2 mb-2 none">
+          <h3>Sem candidatos cadastrados...</h3>
+        </div>)}
+        {candidates.length > 0 && 
         <div className="d-flex d-flex justify-content-center">
               <Pagination count={10} color="primary" hidePrevButton hideNextButton onChange={() => {}} />
-        </div>
+        </div>}
 
       </main>
     </div>

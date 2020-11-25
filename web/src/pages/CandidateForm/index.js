@@ -22,7 +22,9 @@ const CandidateForm = () => {
   const [values, setValues] = useState(initialValuesCandidate);
   const [loading, setLoading] = useState(false);
   const [fotoCandidato, setFotoCandidato] = useState('');
+  const [previewFotoCandidato, setPreviewFotoCandidato] = useState('');
   const [fotoVice, setFotoVice] = useState('');
+  const [previewFotoVice, setPreviewFotoVice] = useState('');
   
   const history = useHistory();
 
@@ -56,7 +58,7 @@ const CandidateForm = () => {
       if (response.status === 200) {
         toast.info(response.data.message);
         setLoading(false);
-        history.push('/');
+        history.push('/admin');
         return;
       }
     } catch (error) {
@@ -78,9 +80,14 @@ const CandidateForm = () => {
     let {name, value, files} = e.target;
 
     if (name === 'fotoCandidato') {
-      setFotoCandidato(files[0])
+      setFotoCandidato(files[0]);
+      setPreviewFotoCandidato(URL.createObjectURL(files[0]));
+      console.log('teste', URL.createObjectURL(files[0]))
+
     } else if (name === 'fotoVice') {
-      setFotoVice(files[0])
+      setFotoVice(files[0]);
+      console.log('teste', URL.createObjectURL(files[0]))
+      setPreviewFotoVice(URL.createObjectURL(files[0]));
     } else if (name === 'digito') {
       let regex = /[^0-9]/g;
       let newValue = value.replace(regex, "");
@@ -90,6 +97,7 @@ const CandidateForm = () => {
     }
 
   }, [])
+
   return (
     <>
       <Loading load={loading}/>
@@ -156,10 +164,15 @@ const CandidateForm = () => {
             label="Foto candidato" 
             type="file"
             onChange={e => handleChange(e)}
-            value={fotoCandidato}
             name="fotoCandidato"
             accept="image/*"
-          />
+          >
+          {previewFotoCandidato.length > 0 ? (
+            <img src={previewFotoCandidato} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida candidato" />
+        ) : (
+                <div></div>
+            )}
+          </InputText>
            {
             values.tipoCandidato == 1 &&
               <InputText
@@ -167,11 +180,16 @@ const CandidateForm = () => {
                 label="Foto do vice"
                 type="file"
                 onChange={e => handleChange(e)}
-                value={fotoVice}
                 name="fotoVice"
                 accept="image/*"
-              />
-          }
+              >
+                {previewFotoVice.length > 0 ? (
+                      <img src={previewFotoVice} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida vice" />
+                  ) : (
+                          <div></div>
+                      )}
+                </InputText>
+            }
           <div className="buttons">
             <button className="btn btn-secondary" type="button" onClick={clearForm}>Limpar campos</button>
             <button className="btn btn-primary mr-2" type="submit">Salvar</button>

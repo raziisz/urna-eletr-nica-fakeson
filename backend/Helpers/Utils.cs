@@ -31,7 +31,7 @@ namespace backend.Helpers
     public static async Task SaveFile(IFormFile file, string nameFile, string webRootPath) {
       
       string folderName = @"images";
-      string filename = $"${nameFile}_{DateTime.Now.Millisecond.ToString()}";
+      string filename = $"{nameFile}_{DateTime.Now.Millisecond.ToString()}";
 
       if (file == null || file.Length == 0) return;
 
@@ -41,6 +41,10 @@ namespace backend.Helpers
           filename += ".gif";
       else if (file.FileName.Contains(".png"))
           filename += ".png";
+      else if (file.FileName.Contains(".jpeg"))
+          filename += ".jpeg";
+      else if (file.FileName.Contains(".jfif"))
+          filename += ".jfif";
       else
           filename += ".tmp";
         
@@ -50,6 +54,24 @@ namespace backend.Helpers
       {
           await file.CopyToAsync(stream);
       }  
+    }
+
+    public static string SearchFileAndTransformUrl(string value, string webRootPath) {
+      string path = webRootPath + @"\images";
+      DirectoryInfo di = new DirectoryInfo(path);
+
+      string searched = "";
+
+      foreach (var file in di.GetFiles())
+      {
+          if (file.Name.Contains(value)) {
+            searched = file.Name;
+          }
+      }
+
+
+
+      return searched;
     }
   }
 }

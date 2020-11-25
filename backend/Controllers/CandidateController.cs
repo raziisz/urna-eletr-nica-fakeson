@@ -26,9 +26,10 @@ namespace backend.Controllers
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(CandidatesParams cp)
+    public async Task<IActionResult> Index([FromQuery] CandidatesParams cp)
     {
       var result = await repo.GetCandidatos(cp);
+      var webRootPath = environment.WebRootPath;
 
       Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
 
@@ -40,8 +41,11 @@ namespace backend.Controllers
         Legenda = x.Legenda,
         NomeCompleto = x.NomeCompleto,
         NomeVice = x.NomeVice,
-        TipoCandidato = x.TipoCandidato
+        TipoCandidato = x.TipoCandidato,
+        UrlFotoCandidato = Utils.SearchFileAndTransformUrl($"{x.Digito}_{x.NomeCompleto.Replace(" ", "")}", webRootPath),
+        UrlFotoVice = Utils.SearchFileAndTransformUrl($"{x.Digito}_{x.NomeVice.Replace(" ", "")}", webRootPath)
       }).ToArray();
+      
       return Ok(new { candidatos });
     }
     [AllowAnonymous]

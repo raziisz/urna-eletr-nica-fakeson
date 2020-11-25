@@ -13,4 +13,12 @@ main.container-fluid .title {
 main.container-fluid .buttons {
   display: flex;
   flex-direction: row-reverse;
+  margin-top: 20px;
 }
+
+main.container-fluid form .imgup{
+  width: 150px;
+  height: 150px;
+  margin-left: 100px;
+}
+
