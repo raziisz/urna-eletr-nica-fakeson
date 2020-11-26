@@ -1,6 +1,7 @@
 import React from 'react';
 import { FiEdit, FiTrash } from 'react-icons/fi';
-import api, { baseURL } from 'services/api';
+import { baseURL } from 'services/api';
+import { useHistory } from 'react-router-dom';
 
 const type = {
   "1": "Prefeito",
@@ -9,6 +10,11 @@ const type = {
 
 export default ({ data }) => {
   const imageCandidate = `${baseURL}/images/${data.fotoCandidato}`;
+  const history = useHistory();
+
+  const handleEdit = () => {
+    history.push('/admin/candidate', { id: data.id});
+  }
   
   return (
     <div className="row mt-2 mb-2">
@@ -44,7 +50,7 @@ export default ({ data }) => {
       <div className="d-flex flex-column justify-content-center align-items-center">
         <span className="title-span">Ações</span>
         <div className="btn-group btn-group-sm">
-          <button className="btn btn-secondary">
+          <button className="btn btn-secondary" onClick={handleEdit}>
             <FiEdit />
           </button>
           <button className="btn btn-danger">

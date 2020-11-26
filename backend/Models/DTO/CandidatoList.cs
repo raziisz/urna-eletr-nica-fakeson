@@ -2,7 +2,7 @@ using System;
 
 namespace backend.Models.DTO
 {
-    public class CandidatoList
+    public class CandidatoDto
     {
         public int Id { get; set; }
         public string Digito { get; set; }

@@ -33,7 +33,7 @@ namespace backend.Controllers
 
       Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
 
-      var candidatos = result.Select(x => new CandidatoList
+      var candidatos = result.Select(x => new CandidatoDto
       {
         Id = x.Id,
         Digito = x.Digito,
@@ -49,14 +49,53 @@ namespace backend.Controllers
       return Ok(new { candidatos });
     }
     [AllowAnonymous]
-    [HttpGet("{digito}")]
-    public async Task<IActionResult> Show(string digito)
+    [HttpGet("/byDigit/{digito}")]
+    public async Task<IActionResult> GetCandidate(string digito)
     {
-      var candidate = await repo.GetCandidatoByDigito(digito);
+      var result = await repo.GetCandidatoByDigito(digito);
+      var webRootPath = environment.WebRootPath;
+
+      if (result == null) return NotFound(new { message = "Candidato não encontrado!" });
+
+      var candidato = new CandidatoDto
+      {
+        Id = result.Id,
+        Digito = result.Digito,
+        DataRegistro = result.DataRegistro,
+        Legenda = result.Legenda,
+        NomeCompleto = result.NomeCompleto,
+        NomeVice = result.NomeVice != null ?result.NomeVice : "",
+        TipoCandidato = result.TipoCandidato,
+        FotoCandidato = Utils.SearchFile($"{result.Digito}_{result.NomeCompleto.Replace(" ", "")}", webRootPath),
+        FotoVice = result.NomeVice != null ? Utils.SearchFile($"{result.Digito}_{result.NomeVice.Replace(" ", "")}", webRootPath) : "",
+      };
+
+      return Ok(new { candidato });
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Show(int id)
+    {
+      var candidate = await repo.GetCandidatoById(id);
+      var webRootPath = environment.WebRootPath;
+      
 
       if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
 
-      return Ok(new { candidate });
+      var candidato = new CandidatoDto
+      {
+        Id = candidate.Id,
+        Digito = candidate.Digito,
+        DataRegistro = candidate.DataRegistro,
+        Legenda = candidate.Legenda,
+        NomeCompleto = candidate.NomeCompleto,
+        NomeVice = candidate.NomeVice != null ?candidate.NomeVice : "",
+        TipoCandidato = candidate.TipoCandidato,
+        FotoCandidato = Utils.SearchFile($"{candidate.Digito}_{candidate.NomeCompleto.Replace(" ", "")}", webRootPath),
+        FotoVice = candidate.NomeVice != null ? Utils.SearchFile($"{candidate.Digito}_{candidate.NomeVice.Replace(" ", "")}", webRootPath) : "",
+      };
+
+
+      return Ok(new { candidato });
     }
 
     [HttpPost("PostCandidate")]
@@ -75,7 +114,7 @@ namespace backend.Controllers
         
         if (candidatoNewDto.TipoCandidato == 1) {
           var filenameVice = $"{candidatoNewDto.Digito}_{candidatoNewDto.NomeVice.Replace(" ", "")}";
-          await Utils.SaveFile(candidatoNewDto.FotoCandidato, filenameVice, webRootPath);
+          await Utils.SaveFile(candidatoNewDto.FotoVice, filenameVice, webRootPath);
 
         }
         

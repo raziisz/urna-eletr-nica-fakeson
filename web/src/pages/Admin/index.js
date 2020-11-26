@@ -37,30 +37,31 @@ export default () => {
     history.push('/admin/candidate');
   }
 
-  const handleFilter = (e) => {
+  const handleFilter = async (e) => {
     setLoading(prev => !prev);
 
     let { value } = e.target;
     value = parseInt(value);
     
     setFilterType(value);
-    loadCandidates(value);
+    await loadCandidates(value);
     
     setLoading(prev => !prev);
 
   }
 
-  const handlePage = (e, value) => {
+  const handlePage = async (e, value) => {
     const page = parseInt(value);
+    console.log(page)
     setLoading(prev => !prev);
 
-    loadCandidates(filterType, page);
+    await loadCandidates(filterType, page);
 
     setLoading(prev => !prev);
   }
 
-  const loadCandidates = (type = 0, page = 1) => {
-    api.get('api/v1/candidate', { 
+  const loadCandidates = async (type = 0, page = 1) => {
+    return api.get('api/v1/candidate', { 
       params: {
         type: type,
         pageNumber: page
@@ -85,35 +86,37 @@ export default () => {
       });
   }
   return (
-    <div id="page-admin" className="container">
+    <>
       <Loading load={loading}/>
-      <main>
-        <h3 className="title-admin">Painel administrativo - ELEIÇÕES 2020</h3>
-        <div className="d-flex d-flex justify-content-between mb-3">
-          <div className="select-input">
-            <label htmlFor="type">Tipo de candidatura: </label>
-            <select defaultValue={filterType} onChange={handleFilter} name="type" className="form-control ">
-              <option value="0">TODOS</option>
-              <option value="1">PREFEITO</option>
-              <option value="2">VEREADOR</option>
-            </select>
+      <div id="page-admin" className="container">
+        <main className="pb-5">
+          <h3 className="title-admin">Painel administrativo - ELEIÇÕES 2020</h3>
+          <div className="d-flex d-flex justify-content-between mb-3">
+            <div className="select-input">
+              <label htmlFor="type">Tipo de candidatura: </label>
+              <select defaultValue={filterType} onChange={handleFilter} name="type" className="form-control ">
+                <option value="0">TODOS</option>
+                <option value="1">PREFEITO</option>
+                <option value="2">VEREADOR</option>
+              </select>
+            </div>
+            <button className="btn btn-sm btn-primary" onClick={handleAdd}>
+              <FiPlusCircle />
+            </button>
           </div>
-          <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-            <FiPlusCircle />
-          </button>
-        </div>
-       { candidates.length > 0 ? (candidates.map(x => (
-         <CandidateItem data={x} key={x.id}/>
-       ))) : 
-        (<div className="row mt-2 mb-2 none">
-          <h3>Sem candidatos cadastrados...</h3>
-        </div>)}
-        {(candidates.length > 0 && pagination.totalItens > 0) && 
-        <div className="d-flex d-flex justify-content-center">
-              <Pagination count={pagination.totalPages} onChange={handlePage} color="primary" hidePrevButton hideNextButton onChange={() => {}} />
-        </div>}
+        { candidates.length > 0 ? (candidates.map(x => (
+          <CandidateItem data={x} key={x.id}/>
+        ))) : 
+          (<div className="row mt-2 mb-2 none">
+            <h3>Sem candidatos cadastrados...</h3>
+          </div>)}
+          {(candidates.length > 0 && pagination.totalItens > 0) && 
+          <div className="d-flex d-flex justify-content-center mb-5">
+                <Pagination count={pagination.totalPages} onChange={handlePage} color="primary" hidePrevButton hideNextButton/>
+          </div>}
 
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   )
 }

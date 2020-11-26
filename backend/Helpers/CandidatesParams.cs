@@ -4,7 +4,7 @@ namespace backend.Helpers
     {
         private const int MaxPageSize = 30;
         public int PageNumber { get; set; } = 1;
-        private int pageSize = 20;
+        private int pageSize = 10;
         public int PageSize
         {
             get { return pageSize; }

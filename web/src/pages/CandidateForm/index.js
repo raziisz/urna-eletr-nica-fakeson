@@ -4,7 +4,7 @@ import './styles.css';
 import { FiArrowLeft, FiHeart } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { Link, useHistory } from 'react-router-dom';
-import api from 'services/api';
+import api, { baseURL } from 'services/api';
 
 import Loading from 'components/Loading';
 import InputText from 'components/Input';
@@ -28,7 +28,50 @@ const CandidateForm = () => {
   
   const history = useHistory();
 
+  useEffect(() => {
 
+    const  id  = history.location.state?.id;
+    
+    if (id) {
+      setLoading(prev => !prev); 
+      api.get('api/v1/candidate/' + id)
+        .then(response => {
+          console.log(response.data)
+          const value = response.data.candidato;
+
+          let candidatoEdit = {
+            id: value.id,
+            digito: value.digito,
+            dataRegistro: value.dataRegistro,
+            legenda: value.legenda,
+            nomeCompleto: value.nomeCompleto,
+            nomeVice: value.nomeVice,
+            tipoCandidato: value.tipoCandidato,
+          }
+          console.log(candidatoEdit)
+
+          let fotoPrev1 = `${baseURL}/images/${value.fotoCandidato}`;
+          let fotoPrev2 = `${baseURL}/images/${value.fotoVice}`;
+
+          setValues(candidatoEdit);
+          setPreviewFotoCandidato(fotoPrev1);
+          setPreviewFotoVice(fotoPrev2);
+        })
+        .catch(error => {
+          console.log(error)
+          if (error.response) {
+            if (error.response.status === 404) {
+                toast.error(error.response.data.message);
+            } else if (error.response.status === 500) {
+                toast.error(error.response.data.message);
+            }
+          } else {
+              toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
+          }
+        })
+        .finally((_) => setLoading(prev => !prev));
+    }
+  }, [])
   const clearForm = () => {
     setValues({});
   }
@@ -82,11 +125,9 @@ const CandidateForm = () => {
     if (name === 'fotoCandidato') {
       setFotoCandidato(files[0]);
       setPreviewFotoCandidato(URL.createObjectURL(files[0]));
-      console.log('teste', URL.createObjectURL(files[0]))
 
     } else if (name === 'fotoVice') {
       setFotoVice(files[0]);
-      console.log('teste', URL.createObjectURL(files[0]))
       setPreviewFotoVice(URL.createObjectURL(files[0]));
     } else if (name === 'digito') {
       let regex = /[^0-9]/g;
@@ -101,8 +142,8 @@ const CandidateForm = () => {
   return (
     <>
       <Loading load={loading}/>
-      <main className="container-fluid">
-        <h3 className="mt-3 title">Cadastro de Candidato </h3>
+      <main className="container-fluid mb-5">
+        <h3 className="mt-3 title">{values.id ? "Edição" : "Cadastro"} de Candidato </h3>
         <p className="text-info">
           Verifique cada campo com os dados digitados antes de salvar.
         </p>
@@ -113,7 +154,7 @@ const CandidateForm = () => {
           </Link>
           <InputText
             classList="form-control" 
-            label="Nome do completo" 
+            label="Nome do completo *" 
             type="text"
             onChange={e => handleChange(e)}
             required
@@ -122,7 +163,7 @@ const CandidateForm = () => {
           />
           <InputText 
             classList="form-control" 
-            label="Legenda" 
+            label="Legenda *" 
             type="text"
             onChange={e => handleChange(e)}
             value={values.legenda}
@@ -131,7 +172,7 @@ const CandidateForm = () => {
           />
           <SelectInput
             classList="form-control"  
-            label="Tipo de candidato" 
+            label="Tipo de candidato *" 
             onChange={e => handleChange(e)}
             value={values.tipoCandidato}
             options={[{label: 'Prefeito', value: 1}, {label: 'Vereador', value: 2}]}
@@ -142,7 +183,7 @@ const CandidateForm = () => {
             values.tipoCandidato == 1 &&
               <InputText
                 classList="form-control"  
-                label="Nome do vice"
+                label="Nome do vice *"
                 type="text"
                 onChange={e => handleChange(e)}
                 value={values.nomeVice}
@@ -151,7 +192,7 @@ const CandidateForm = () => {
           }
           <InputText
             classList="form-control"  
-            label="Dígito" 
+            label="Dígito *" 
             type="text"
             onChange={e => handleChange(e)}
             value={values.digito}
@@ -161,11 +202,12 @@ const CandidateForm = () => {
           />
           <InputText
             classList="form-control-file"  
-            label="Foto candidato" 
+            label="Foto candidato *" 
             type="file"
             onChange={e => handleChange(e)}
             name="fotoCandidato"
             accept="image/*"
+            required
           >
           {previewFotoCandidato.length > 0 ? (
             <img src={previewFotoCandidato} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida candidato" />
@@ -177,11 +219,12 @@ const CandidateForm = () => {
             values.tipoCandidato == 1 &&
               <InputText
                 classList="form-control-file" 
-                label="Foto do vice"
+                label="Foto do vice *"
                 type="file"
                 onChange={e => handleChange(e)}
                 name="fotoVice"
                 accept="image/*"
+                required
               >
                 {previewFotoVice.length > 0 ? (
                       <img src={previewFotoVice} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida vice" />
