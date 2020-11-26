@@ -49,7 +49,7 @@ const CandidateForm = () => {
     }
 
     try {
-      const response = await api.post('candidate/PostCandidate', formData, {
+      const response = await api.post('api/v1/candidate/PostCandidate', formData, {
         headers: {
           ContentType: 'multipart/form-data'
         }

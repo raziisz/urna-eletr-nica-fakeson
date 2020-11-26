@@ -23,7 +23,7 @@ const Login = () => {
         }
 
         try {
-            const response = await api.post('auth', data);
+            const response = await api.post('api/v1/auth', data);
 
             if (response.status === 200) {
                 login(response.data.token);

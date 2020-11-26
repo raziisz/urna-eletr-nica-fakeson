@@ -16,13 +16,61 @@ import api from 'services/api';
 export default () => {
   const history = useHistory();
   const [candidates, setCandidates] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    itensPerPage: 10,
+    totalItens: 0,
+    totalPages: 0
+  })
   const [loading, setLoading] = useState(false);
+  const [filterType, setFilterType] = useState(0);
 
   useEffect(() => {
 
     setLoading(prev => !prev);
-    api.get('/candidate')
-      .then(response => response.data)
+    loadCandidates();
+    setLoading(prev => !prev);
+
+  }, []);
+  
+  const handleAdd = () => {
+    history.push('/admin/candidate');
+  }
+
+  const handleFilter = (e) => {
+    setLoading(prev => !prev);
+
+    let { value } = e.target;
+    value = parseInt(value);
+    
+    setFilterType(value);
+    loadCandidates(value);
+    
+    setLoading(prev => !prev);
+
+  }
+
+  const handlePage = (e, value) => {
+    const page = parseInt(value);
+    setLoading(prev => !prev);
+
+    loadCandidates(filterType, page);
+
+    setLoading(prev => !prev);
+  }
+
+  const loadCandidates = (type = 0, page = 1) => {
+    api.get('api/v1/candidate', { 
+      params: {
+        type: type,
+        pageNumber: page
+       }
+    })
+      .then(response => {
+        const pag = JSON.parse(response.headers.pagination);
+        setPagination(pag);
+        return response.data
+      })
       .then(data => setCandidates(data.candidatos))
       .catch(error => {
         if (error.response) {
@@ -35,13 +83,6 @@ export default () => {
             toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
         }
       });
-
-    setLoading(false);
-
-  }, [])
-  
-  const handleAdd = () => {
-    history.push('/admin/candidate');
   }
   return (
     <div id="page-admin" className="container">
@@ -51,7 +92,7 @@ export default () => {
         <div className="d-flex d-flex justify-content-between mb-3">
           <div className="select-input">
             <label htmlFor="type">Tipo de candidatura: </label>
-            <select value="0" name="type" className="form-control ">
+            <select defaultValue={filterType} onChange={handleFilter} name="type" className="form-control ">
               <option value="0">TODOS</option>
               <option value="1">PREFEITO</option>
               <option value="2">VEREADOR</option>
@@ -67,9 +108,9 @@ export default () => {
         (<div className="row mt-2 mb-2 none">
           <h3>Sem candidatos cadastrados...</h3>
         </div>)}
-        {candidates.length > 0 && 
+        {(candidates.length > 0 && pagination.totalItens > 0) && 
         <div className="d-flex d-flex justify-content-center">
-              <Pagination count={10} color="primary" hidePrevButton hideNextButton onChange={() => {}} />
+              <Pagination count={pagination.totalPages} onChange={handlePage} color="primary" hidePrevButton hideNextButton onChange={() => {}} />
         </div>}
 
       </main>

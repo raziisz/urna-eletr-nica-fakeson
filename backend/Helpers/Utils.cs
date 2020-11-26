@@ -56,7 +56,7 @@ namespace backend.Helpers
       }  
     }
 
-    public static string SearchFileAndTransformUrl(string value, string webRootPath) {
+    public static string SearchFile(string value, string webRootPath) {
       string path = webRootPath + @"\images";
       DirectoryInfo di = new DirectoryInfo(path);
 

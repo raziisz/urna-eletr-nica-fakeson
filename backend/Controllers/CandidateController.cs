@@ -40,10 +40,10 @@ namespace backend.Controllers
         DataRegistro = x.DataRegistro,
         Legenda = x.Legenda,
         NomeCompleto = x.NomeCompleto,
-        NomeVice = x.NomeVice,
+        NomeVice = x.NomeVice != null ? x.NomeVice : "",
         TipoCandidato = x.TipoCandidato,
-        UrlFotoCandidato = Utils.SearchFileAndTransformUrl($"{x.Digito}_{x.NomeCompleto.Replace(" ", "")}", webRootPath),
-        UrlFotoVice = Utils.SearchFileAndTransformUrl($"{x.Digito}_{x.NomeVice.Replace(" ", "")}", webRootPath)
+        FotoCandidato = Utils.SearchFile($"{x.Digito}_{x.NomeCompleto.Replace(" ", "")}", webRootPath),
+        FotoVice = x.NomeVice != null ? Utils.SearchFile($"{x.Digito}_{x.NomeVice.Replace(" ", "")}", webRootPath) : "",
       }).ToArray();
       
       return Ok(new { candidatos });
