@@ -42,8 +42,8 @@ namespace backend.Controllers
         NomeCompleto = x.NomeCompleto,
         NomeVice = x.NomeVice != null ? x.NomeVice : "",
         TipoCandidato = x.TipoCandidato,
-        FotoCandidato = Utils.SearchFile($"{x.Digito}_{x.NomeCompleto.Replace(" ", "")}", webRootPath),
-        FotoVice = x.NomeVice != null ? Utils.SearchFile($"{x.Digito}_{x.NomeVice.Replace(" ", "")}", webRootPath) : "",
+        FotoCandidato = Utils.SearchFile($"{x.Digito}_", webRootPath),
+        FotoVice = x.NomeVice != null ? Utils.SearchFile($"{x.Digito}_vice", webRootPath) : "",
       }).ToArray();
       
       return Ok(new { candidatos });
@@ -66,8 +66,8 @@ namespace backend.Controllers
         NomeCompleto = result.NomeCompleto,
         NomeVice = result.NomeVice != null ?result.NomeVice : "",
         TipoCandidato = result.TipoCandidato,
-        FotoCandidato = Utils.SearchFile($"{result.Digito}_{result.NomeCompleto.Replace(" ", "")}", webRootPath),
-        FotoVice = result.NomeVice != null ? Utils.SearchFile($"{result.Digito}_{result.NomeVice.Replace(" ", "")}", webRootPath) : "",
+        FotoCandidato = Utils.SearchFile($"{result.Digito}_", webRootPath),
+        FotoVice = result.NomeVice != null ? Utils.SearchFile($"{result.Digito}_vice_", webRootPath) : "",
       };
 
       return Ok(new { candidato });
@@ -90,8 +90,8 @@ namespace backend.Controllers
         NomeCompleto = candidate.NomeCompleto,
         NomeVice = candidate.NomeVice != null ?candidate.NomeVice : "",
         TipoCandidato = candidate.TipoCandidato,
-        FotoCandidato = Utils.SearchFile($"{candidate.Digito}_{candidate.NomeCompleto.Replace(" ", "")}", webRootPath),
-        FotoVice = candidate.NomeVice != null ? Utils.SearchFile($"{candidate.Digito}_{candidate.NomeVice.Replace(" ", "")}", webRootPath) : "",
+        FotoCandidato = Utils.SearchFile($"{candidate.Digito}_", webRootPath),
+        FotoVice = candidate.NomeVice != null ? Utils.SearchFile($"{candidate.Digito}_vice_", webRootPath) : "",
       };
 
 
@@ -104,16 +104,22 @@ namespace backend.Controllers
       var candidate = await repo.GetCandidatoByDigito(candidatoNewDto.Digito);
 
       if (candidate != null) return BadRequest(new { message = "Já existe um candidato com este dígito!" });
+      if (candidatoNewDto.FotoCandidato == null) {
+        return BadRequest(new { message = "Candidato não pode ficar sem foto! Favor inserir" });
+      }
+      if (candidatoNewDto.TipoCandidato == 1 && candidatoNewDto.FotoVice == null) {
+        return BadRequest(new { message = "Vice não ficar sem foto! Favor inserir" });
+      }
 
       await repo.AddCandidato(candidatoNewDto);
 
       if (await uof.Commit())
       {
         var webRootPath = environment.WebRootPath;
-        var filenameCandidate = $"{candidatoNewDto.Digito}_{candidatoNewDto.NomeCompleto.Replace(" ", "")}";
+        var filenameCandidate = $"{candidatoNewDto.Digito}_";
         
         if (candidatoNewDto.TipoCandidato == 1) {
-          var filenameVice = $"{candidatoNewDto.Digito}_{candidatoNewDto.NomeVice.Replace(" ", "")}";
+          var filenameVice = $"{candidatoNewDto.Digito}_vice_";
           await Utils.SaveFile(candidatoNewDto.FotoVice, filenameVice, webRootPath);
 
         }
@@ -141,16 +147,53 @@ namespace backend.Controllers
     }
 
     [HttpPut("EditCandidate/{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CandidatoNewDto candidatoUpdate)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromForm] CandidatoNewDto candidatoUpdate)
     {
       var candidate = await repo.GetCandidatoById(id);
-
+      var webRootPath = environment.WebRootPath;
+     
       if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
+      if (candidate.Digito != candidatoUpdate.Digito) return BadRequest(new { message = "Você não pode alterar dígito do candidato!" });
       if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!" });
+
+
 
       await repo.UpdateCandidato(id, candidatoUpdate);
 
-      if (await uof.Commit()) return NoContent();
+      if (candidatoUpdate.FotoCandidato != null || candidatoUpdate.FotoVice != null) {
+
+        if(candidatoUpdate.FotoCandidato != null) {
+
+          //deleta foto antiga
+          var oldFotoCandidato = Utils.SearchFile($"{candidate.Digito}_", webRootPath);
+          Utils.DeleteFile(oldFotoCandidato, webRootPath);
+         
+         //salva nova
+          var newFotoCandidato = $"{candidate.Digito}_";
+          await Utils.SaveFile(candidatoUpdate.FotoCandidato, newFotoCandidato, webRootPath);
+        }
+
+        if (candidatoUpdate.TipoCandidato == 1 && candidatoUpdate.FotoVice != null) {
+          //deleta foto antiga
+          var oldFotoVice = Utils.SearchFile($"{candidate.Digito}_vice_", webRootPath);
+          Utils.DeleteFile(oldFotoVice, webRootPath);
+         
+         //salva nova
+          var newFotoCandidato = $"{candidate.Digito}_vice_";
+          await Utils.SaveFile(candidatoUpdate.FotoCandidato, newFotoCandidato, webRootPath);
+        }
+
+      }
+
+      if (await uof.Commit()){ 
+
+        return NoContent();
+
+      } 
+
+      if ( if (candidatoUpdate.FotoCandidato != null || candidatoUpdate.FotoVice != null)) {
+        return NoContent();
+      }
 
       throw new Exception("Ocorreu um erro interno");
 

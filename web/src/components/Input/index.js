@@ -11,12 +11,13 @@ export default ({
   name,
   accept = "",
   classList="",
-  children
+  children,
+  minLength
 }) => {
   return (
       <div className="form-group">
         <label htmlFor={name}>{label}</label>
-        <input onChange={onChange} type={type} className={classList} placeholder={placeholder} name={name} value={value} required={required} maxLength={maxLength} accept={accept}/>
+        <input onChange={onChange} type={type} className={classList} placeholder={placeholder} name={name} value={value} required={required} maxLength={maxLength} accept={accept} minLength={minLength}/>
         {children}
       </div>
     )

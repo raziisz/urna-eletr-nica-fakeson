@@ -12,8 +12,8 @@ export default ({ data }) => {
   const imageCandidate = `${baseURL}/images/${data.fotoCandidato}`;
   const history = useHistory();
 
-  const handleEdit = () => {
-    history.push('/admin/candidate', { id: data.id});
+  const handleEdit = (id) => {
+    history.push(`/admin/candidate?id=${id}`);
   }
   
   return (
@@ -50,7 +50,7 @@ export default ({ data }) => {
       <div className="d-flex flex-column justify-content-center align-items-center">
         <span className="title-span">Ações</span>
         <div className="btn-group btn-group-sm">
-          <button className="btn btn-secondary" onClick={handleEdit}>
+          <button className="btn btn-secondary" onClick={() => handleEdit(data.id)}>
             <FiEdit />
           </button>
           <button className="btn btn-danger">

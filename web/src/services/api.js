@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { getToken } from './auth'
+import { getToken, logout } from './auth'
 
 export const baseURL = "http://localhost:5000";
+export const baseURLFront = window.location.host;
 
 const api = axios.create({
   baseURL: baseURL
@@ -16,5 +17,17 @@ api.interceptors.request.use(async config => {
     }
     return config;
   });
+
+api.interceptors.response.use( (response) => {
+    return response;
+}, (error) => {
+    if (401 === error.response.status) {
+      logout();
+      localStorage.setItem('isInvalid', "invalido");
+      window.location = "/login";
+    } else {
+        return Promise.reject(error);
+    }
+});
 
 export default api;

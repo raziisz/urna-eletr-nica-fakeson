@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import './styles.css';
 import Logo from 'assets/images/eleicaoLogo.jpg';
 import { login } from 'services/auth';
-import api from 'services/api';
+import api, { baseURLFront } from 'services/api';
 import Loading from 'components/Loading';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [prev, setPrev] = useState('');
     const history = useHistory();
+
+    useEffect(() => {
+        
+        if (document.referrer) {
+            let data = document.referrer.replace(baseURLFront, "");
+            setPrev(data);
+        }
+
+        if (localStorage.getItem('isInvalid')) {
+            toast.error('Suas credênciais expiraram por favor, faça login novamente.');
+            localStorage.clear();
+        }
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,7 +43,11 @@ const Login = () => {
                 login(response.data.token);
                 toast.info(`Seja bem-vindo ${response.data.user.nome}.`);
                 setLoading(false);
-                history.push('/admin');
+                if(prev) {
+                    history.push(prev);
+                } else {
+                    history.push('/admin');
+                }
                 return;
             }
         } catch (error) {

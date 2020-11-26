@@ -27,16 +27,19 @@ const CandidateForm = () => {
   const [previewFotoVice, setPreviewFotoVice] = useState('');
   
   const history = useHistory();
-
+  
+  const setQuery = () => {
+    return new URLSearchParams(history.location.search);
+  }
+  
   useEffect(() => {
-
-    const  id  = history.location.state?.id;
+    const query =  setQuery();
+    const id  = query.get('id');
     
     if (id) {
       setLoading(prev => !prev); 
       api.get('api/v1/candidate/' + id)
         .then(response => {
-          console.log(response.data)
           const value = response.data.candidato;
 
           let candidatoEdit = {
@@ -48,7 +51,6 @@ const CandidateForm = () => {
             nomeVice: value.nomeVice,
             tipoCandidato: value.tipoCandidato,
           }
-          console.log(candidatoEdit)
 
           let fotoPrev1 = `${baseURL}/images/${value.fotoCandidato}`;
           let fotoPrev2 = `${baseURL}/images/${value.fotoVice}`;
@@ -74,6 +76,10 @@ const CandidateForm = () => {
   }, [])
   const clearForm = () => {
     setValues({});
+    setPreviewFotoCandidato('');
+    setPreviewFotoVice('');
+    setFotoCandidato('');
+    setFotoVice('');
   }
 
   const handleSubmit = async (e) => {
@@ -85,24 +91,45 @@ const CandidateForm = () => {
     formData.append('legenda', values.legenda);
     formData.append('tipoCandidato', values.tipoCandidato);
     formData.append('digito', values.digito);
-    formData.append('fotoCandidato', fotoCandidato);
+    
+    if (fotoCandidato != '') {
+      formData.append('fotoCandidato', fotoCandidato);
+    }
+    
     if (values.tipoCandidato == 1) {
-      formData.append('fotoVice', fotoVice);
+      if(fotoVice != '') {
+        formData.append('fotoVice', fotoVice);
+      }
       formData.append('nomeVice', values.nomeVice);
     }
 
     try {
-      const response = await api.post('api/v1/candidate/PostCandidate', formData, {
-        headers: {
-          ContentType: 'multipart/form-data'
-        }
-      });
+      if(values.id) {
+        const response = await api.put(`api/v1/candidate/EditCandidate/${values.id}`, formData, {
+          headers: {
+            ContentType: 'multipart/form-data'
+          }
+        });
 
-      if (response.status === 200) {
-        toast.info(response.data.message);
-        setLoading(false);
-        history.push('/admin');
-        return;
+        if (response.status === 204) {
+          toast.info('Atualização realizada com sucesso!');
+          setLoading(false);
+          history.push('/admin');
+          return;
+        }
+      } else {
+        const response = await api.post('api/v1/candidate/PostCandidate', formData, {
+          headers: {
+            ContentType: 'multipart/form-data'
+          }
+        });
+  
+        if (response.status === 200) {
+          toast.info(response.data.message);
+          setLoading(false);
+          history.push('/admin');
+          return;
+        }
       }
     } catch (error) {
       if (error.response) {
@@ -198,16 +225,17 @@ const CandidateForm = () => {
             value={values.digito}
             required
             maxLength={values.tipoCandidato == 1 ? 2 : 5}
+            minLength={values.tipoCandidato == 1 ? 2 : 5}
             name="digito"
           />
           <InputText
             classList="form-control-file"  
-            label="Foto candidato *" 
+            label={"Foto candidato "+ values.id ? "" : "*"} 
             type="file"
             onChange={e => handleChange(e)}
             name="fotoCandidato"
             accept="image/*"
-            required
+          
           >
           {previewFotoCandidato.length > 0 ? (
             <img src={previewFotoCandidato} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida candidato" />
@@ -219,12 +247,12 @@ const CandidateForm = () => {
             values.tipoCandidato == 1 &&
               <InputText
                 classList="form-control-file" 
-                label="Foto do vice *"
+                label={"Foto do vice "+ values.id ? "" : "*"}
                 type="file"
                 onChange={e => handleChange(e)}
                 name="fotoVice"
                 accept="image/*"
-                required
+                
               >
                 {previewFotoVice.length > 0 ? (
                       <img src={previewFotoVice} className="mt-2 mb-2 imgup img-thumbnail" alt="Imagem escolhida vice" />

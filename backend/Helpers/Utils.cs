@@ -73,5 +73,16 @@ namespace backend.Helpers
 
       return searched;
     }
+
+    public static void DeleteFile(string value, string webRootPath) {
+
+      if (value == "") return;
+      
+      string pathAndFile = webRootPath + @"\images\" + value;
+
+      File.Delete(pathAndFile);
+
+
+    }
   }
 }

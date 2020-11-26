@@ -99,6 +99,9 @@ const Home = () => {
       digitVereador1.current.focus();
     }
   }, [digitMayor1, digitVereador1]);
+
+  localStorage.clear();
+  
   return (
     <>
     {step === 0 &&

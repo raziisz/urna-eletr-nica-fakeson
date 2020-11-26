@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Jessy from 'assets/images/jessy.jpg';
 
-import { FiEdit, FiTrash, FiPlusCircle } from 'react-icons/fi';
+import { FiPlusCircle } from 'react-icons/fi';
 import { Pagination } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Loading from 'components/Loading';
 import CandidateItem from 'components/CandidateItem';
+import ButtonLogout from 'components/ButtonLogout';
 
 import './styles.css';
 import api from 'services/api';
@@ -52,7 +52,7 @@ export default () => {
 
   const handlePage = async (e, value) => {
     const page = parseInt(value);
-    console.log(page)
+
     setLoading(prev => !prev);
 
     await loadCandidates(filterType, page);
@@ -90,7 +90,10 @@ export default () => {
       <Loading load={loading}/>
       <div id="page-admin" className="container">
         <main className="pb-5">
-          <h3 className="title-admin">Painel administrativo - ELEIÇÕES 2020</h3>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h3 className="title-admin">Painel administrativo - ELEIÇÕES 2020</h3>
+            <ButtonLogout />
+          </div>
           <div className="d-flex d-flex justify-content-between mb-3">
             <div className="select-input">
               <label htmlFor="type">Tipo de candidatura: </label>

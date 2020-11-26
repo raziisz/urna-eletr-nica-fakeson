@@ -11,3 +11,7 @@
   max-width: 100%;
   height: auto;
 }
+
+section.container {
+  min-height: 800px;
+}
