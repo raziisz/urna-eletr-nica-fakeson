@@ -138,6 +138,8 @@ namespace backend.Controllers
       var candidate = await repo.GetCandidatoById(id);
 
       if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
+      if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!" });
+
 
       await repo.DeleteCandidato(id);
 
@@ -154,6 +156,7 @@ namespace backend.Controllers
      
       if (candidate == null) return NotFound(new { message = "Candidato não encontrado!" });
       if (candidate.Digito != candidatoUpdate.Digito) return BadRequest(new { message = "Você não pode alterar dígito do candidato!" });
+      if (candidate.TipoCandidato != candidatoUpdate.TipoCandidato) return BadRequest(new { message = "Você não pode alterar o tipo de candidato" });
       if (candidate.VotosRecebidos.Count > 0) return BadRequest(new { message = "Este candidato já possui votos associados, não é possível alterar seus dados!" });
 
 
@@ -179,8 +182,8 @@ namespace backend.Controllers
           Utils.DeleteFile(oldFotoVice, webRootPath);
          
          //salva nova
-          var newFotoCandidato = $"{candidate.Digito}_vice_";
-          await Utils.SaveFile(candidatoUpdate.FotoCandidato, newFotoCandidato, webRootPath);
+          var newFotoVice = $"{candidate.Digito}_vice_";
+          await Utils.SaveFile(candidatoUpdate.FotoVice, newFotoVice, webRootPath);
         }
 
       }
@@ -191,7 +194,7 @@ namespace backend.Controllers
 
       } 
 
-      if ( if (candidatoUpdate.FotoCandidato != null || candidatoUpdate.FotoVice != null)) {
+      if (candidatoUpdate.FotoCandidato != null || candidatoUpdate.FotoVice != null) {
         return NoContent();
       }
 

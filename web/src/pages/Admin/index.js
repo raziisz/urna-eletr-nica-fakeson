@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { FiPlusCircle } from 'react-icons/fi';
 import { Pagination } from '@material-ui/lab';
@@ -85,6 +85,43 @@ export default () => {
         }
       });
   }
+
+  const handleEdit = useCallback((id) => {
+    history.push(`/admin/candidate?id=${id}`);
+  }, []);
+
+  const handleDelete = useCallback(async (id) => {
+    setLoading(prev => !prev);
+    let confirm = window.confirm("Você tem certeza que quer excluir este candidato?");
+
+    if (!!confirm) {  
+      try {
+        const result = await api.delete(`api/v1/candidate/DeleteCandidate/${id}`);
+
+        if (result.status === 204) {
+          toast.info('Candidato removido com sucesso!');
+          setCandidates(prev => [...prev.filter(x => x.id !== id)]);
+        }
+        
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 400) {
+              toast.error(error.response.data.message);
+          } else if (error.response.status === 404) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 500) {
+              toast.error(error.response.data.message);
+          }
+        } else {
+            toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
+        }
+      }
+      
+
+    }
+
+    setLoading(false);
+  }, [])
   return (
     <>
       <Loading load={loading}/>
@@ -97,7 +134,7 @@ export default () => {
           <div className="d-flex d-flex justify-content-between mb-3">
             <div className="select-input">
               <label htmlFor="type">Tipo de candidatura: </label>
-              <select defaultValue={filterType} onChange={handleFilter} name="type" className="form-control ">
+              <select value={filterType} onChange={handleFilter} name="type" className="form-control ">
                 <option value="0">TODOS</option>
                 <option value="1">PREFEITO</option>
                 <option value="2">VEREADOR</option>
@@ -108,7 +145,7 @@ export default () => {
             </button>
           </div>
         { candidates.length > 0 ? (candidates.map(x => (
-          <CandidateItem data={x} key={x.id}/>
+          <CandidateItem data={x} key={x.id} handleEdit={handleEdit} handleDelete={handleDelete} />
         ))) : 
           (<div className="row mt-2 mb-2 none">
             <h3>Sem candidatos cadastrados...</h3>

@@ -1,21 +1,15 @@
 import React from 'react';
 import { FiEdit, FiTrash } from 'react-icons/fi';
 import { baseURL } from 'services/api';
-import { useHistory } from 'react-router-dom';
 
 const type = {
   "1": "Prefeito",
   "2": "Vereador"
 }
 
-export default ({ data }) => {
+export default ({ data, handleEdit = () => {}, handleDelete = () => {} }) => {
   const imageCandidate = `${baseURL}/images/${data.fotoCandidato}`;
-  const history = useHistory();
 
-  const handleEdit = (id) => {
-    history.push(`/admin/candidate?id=${id}`);
-  }
-  
   return (
     <div className="row mt-2 mb-2">
     <div className="col-sm-1">
@@ -53,7 +47,7 @@ export default ({ data }) => {
           <button className="btn btn-secondary" onClick={() => handleEdit(data.id)}>
             <FiEdit />
           </button>
-          <button className="btn btn-danger">
+          <button className="btn btn-danger" onClick={() => handleDelete(data.id)}>
             <FiTrash />
           </button>
           

@@ -11,7 +11,7 @@ export default () => {
   const handleLogout = () => {
     logout();
 
-    history.push('/login');
+    history.replace('/login');
   }
 
   return <button className="btn btn-outline-danger pb-2 mb-2" onClick={handleLogout} >

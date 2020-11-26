@@ -86,6 +86,15 @@ const CandidateForm = () => {
     e.preventDefault();
     setLoading(true);
 
+    if (values.tipoCandidato == 1) {
+      if (values.digito.length < 2) {
+        toast.error('Os digitos do candidato deve conter 2 dígitos!');
+      }
+    } else {
+      if (values.digito.length < 5) {
+        toast.error('Os digitos do candidato deve conter 5 dígitos!');
+      }
+    }
     let formData = new FormData();
     formData.append('nomeCompleto', values.nomeCompleto);
     formData.append('legenda', values.legenda);
@@ -173,7 +182,10 @@ const CandidateForm = () => {
         <h3 className="mt-3 title">{values.id ? "Edição" : "Cadastro"} de Candidato </h3>
         <p className="text-info">
           Verifique cada campo com os dados digitados antes de salvar.
+          <br/>
+          {values.id ?  "Na edição você não pode alterar os campos dígitos e tipo de candidato." : "Após salva-los você não poderá alterar tipo de candidato e nem digito."}
         </p>
+      
         <form className="card mt-3 py-3 px-5 row" onSubmit={handleSubmit}>
           <Link to="/admin" className="mb-3">
             <FiArrowLeft />
@@ -198,6 +210,7 @@ const CandidateForm = () => {
             required
           />
           <SelectInput
+            disabled={values.id}
             classList="form-control"  
             label="Tipo de candidato *" 
             onChange={e => handleChange(e)}
@@ -227,6 +240,7 @@ const CandidateForm = () => {
             maxLength={values.tipoCandidato == 1 ? 2 : 5}
             minLength={values.tipoCandidato == 1 ? 2 : 5}
             name="digito"
+            disabled={values.id}
           />
           <InputText
             classList="form-control-file"  

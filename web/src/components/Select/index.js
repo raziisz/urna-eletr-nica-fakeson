@@ -7,12 +7,13 @@ export default ({
   options = [],
   value = "",
   name,
-  classList
+  classList,
+  disabled=false
 }) => {
   return (
     <div className="form-group">
         <label>{label}</label>
-        <select className={classList} value={value} onChange={onChange} required={required} name={name}>
+        <select disabled={disabled} className={classList} value={value} onChange={onChange} required={required} name={name}>
           <option value="" disabled hidden>Selecione uma opção</option>
           {options.map(v => (
             <option key={v.value} value={v.value}>{v.label}</option>

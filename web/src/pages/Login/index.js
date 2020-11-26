@@ -18,7 +18,9 @@ const Login = () => {
     useEffect(() => {
         
         if (document.referrer) {
+            console.log('prera', baseURLFront)
             let data = document.referrer.replace(baseURLFront, "");
+            console.log(data);
             setPrev(data);
         }
 
@@ -44,6 +46,7 @@ const Login = () => {
                 toast.info(`Seja bem-vindo ${response.data.user.nome}.`);
                 setLoading(false);
                 if(prev) {
+                    console.log('prev', prev);
                     history.push(prev);
                 } else {
                     history.push('/admin');
