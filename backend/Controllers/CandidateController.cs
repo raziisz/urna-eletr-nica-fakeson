@@ -48,9 +48,10 @@ namespace backend.Controllers
       
       return Ok(new { candidatos });
     }
+    
     [AllowAnonymous]
-    [HttpGet("/byDigit/{digito}")]
-    public async Task<IActionResult> GetCandidate(string digito)
+    [HttpGet("bydigit/{digito}")]
+    public async Task<IActionResult> GetCandidate([FromRoute] string digito)
     {
       var result = await repo.GetCandidatoByDigito(digito);
       var webRootPath = environment.WebRootPath;

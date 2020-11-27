@@ -2,7 +2,8 @@ import React from 'react';
 import InputUrna from 'components/InputUrna';
 import ButtonsUrna from 'components/ButtonsUrna';
 import './styles.css';
-import Jessy from 'assets/images/jessy.jpg';
+
+import { baseURL } from 'services/api';
 
 const VereadorContainer = ({
   complement = false,
@@ -15,8 +16,17 @@ const VereadorContainer = ({
   ref5,
   error = false,
   confirm = () => {},
-  correction = () => {}
+  correction = () => {},
+  annulment = () => {},
+  candidatoVereador
 }) => {
+
+  let noPreenchido = true;
+  if (values[0] !== "" && values[1] !== "" && values[2] !== "" && values[3] !== "" && values[4] !== "")
+    noPreenchido = false;
+
+  const imageVereador = `${baseURL}/images/${candidatoVereador.fotoCandidato}`;
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
         <div className="card w-50">
@@ -25,7 +35,7 @@ const VereadorContainer = ({
             <h2 className="mt-2 align-self-center">VEREADOR(A)</h2>
             {complement && 
               <div className="image-candidate card" >
-                <img className="card-img-top" src={Jessy} alt="Candidato prefeito" />
+                <img className="card-img-top" src={imageVereador} alt="Candidato vereador" />
                 <h5 className="card-title">Vereador(a)</h5>
               </div>}
             <div className="form-group row mt-3">
@@ -41,11 +51,11 @@ const VereadorContainer = ({
              <>
                 <div className="form-group row mt-2">
                   <label className="col-sm-2">Nome:</label>
-                  <label className="col-sm-4">Nome candidato</label>
+                  <label className="col-sm-4">{candidatoVereador.nomeCompleto}</label>
                 </div>
                 <div className="form-group row mt-2">
-                  <label className="col-sm-2">Partido:</label>
-                  <label className="col-sm-4">Sem noções</label>
+                  <label className="col-sm-2">Legenda:</label>
+                  <label className="col-sm-4">{candidatoVereador.legenda}</label>
                 </div>
                 <hr/>
                 <div className="info">
@@ -57,10 +67,10 @@ const VereadorContainer = ({
                     <strong>CORRIGE</strong> para <strong>RENICIAR</strong> este voto
                   </p>
                 </div>
-                <ButtonsUrna confirm={confirm} correction={() => correction('vereador')}/>
 
               </>
              }
+             <ButtonsUrna error={error || noPreenchido} annulment={annulment} confirm={() => confirm('vereador')} correction={() => correction('vereador')}/>
           </div>
         </div>
       </div>

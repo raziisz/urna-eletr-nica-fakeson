@@ -14,7 +14,6 @@ export default ({
     const { name, value} = e.target
     let regex = /[^0-9]/g;
     let newValues = value.replace(regex, "");
-    console.log(name, newValues)
     onChange(name, newValues);
   }
   return (

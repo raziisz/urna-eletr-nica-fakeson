@@ -9,8 +9,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201122184647_withMapping")]
-    partial class withMapping
+    [Migration("20201127124354_new_migr")]
+    partial class new_migr
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,7 +148,8 @@ namespace backend.Migrations
                 {
                     b.HasOne("backend.Models.Candidato", "Candidato")
                         .WithMany("VotosRecebidos")
-                        .HasForeignKey("CandidatoId");
+                        .HasForeignKey("CandidatoId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }

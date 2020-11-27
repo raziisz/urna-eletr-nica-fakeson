@@ -2,7 +2,8 @@ import React from 'react';
 import InputUrna from 'components/InputUrna';
 import ButtonsUrna from 'components/ButtonsUrna';
 import './styles.css';
-import Jessy from 'assets/images/jessy.jpg';
+
+import { baseURL } from 'services/api';
 
 const PrefeitoContainer = ({
   complement = false,
@@ -12,8 +13,18 @@ const PrefeitoContainer = ({
   ref2,
   error = false,
   confirm = () => {},
-  correction = () => {}
+  correction = () => {},
+  annulment = () => {},
+  candidatoPrefeito
 }) => {
+  const imagePrefeito = `${baseURL}/images/${candidatoPrefeito.fotoCandidato}`;
+  const imageVice = `${baseURL}/images/${candidatoPrefeito.fotoVice}`;
+  let noPreenchido = true;
+
+  if (values[0] !== "" && values[1] !== "") {
+    noPreenchido = false;
+  }
+  console.log(values[0], values[1])
   return (
     <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
         <div className="card w-50">
@@ -22,7 +33,7 @@ const PrefeitoContainer = ({
             <h2 className="mt-2 align-self-center">PREFEITO(A)</h2>
             {complement && 
               <div className="image-candidate card" >
-                <img className="card-img-top" src={Jessy} alt="Candidato prefeito" />
+                <img className="card-img-top" src={imagePrefeito} alt="Candidato prefeito" />
                 <h5 className="card-title">Prefeito(a)</h5>
               </div>}
             <div className="form-group row mt-3">
@@ -35,19 +46,19 @@ const PrefeitoContainer = ({
              <>
                 <div className="form-group row mt-2">
                   <label className="col-sm-2">Nome:</label>
-                  <label className="col-sm-4">Nome candidato</label>
+                  <label className="col-sm-4">{candidatoPrefeito.nomeCompleto}</label>
                 </div>
                 <div className="image-vice card" >
-                  <img className="card-img-top" src={Jessy} alt="Candidato vice-prefeito" />
+                  <img className="card-img-top" src={imageVice} alt="Candidato vice-prefeito" />
                   <h5 className="card-title">Vice</h5>
                 </div>
                 <div className="form-group row mt-2">
-                  <label className="col-sm-2">Partido:</label>
-                  <label className="col-sm-4">Sem noções</label>
+                  <label className="col-sm-2">Legenda:</label>
+                  <label className="col-sm-4">{candidatoPrefeito.legenda}</label>
                 </div>
                 <div className="form-group row mt-2">
                   <label className="col-sm-3">Vice-Prefeito(a):</label>
-                  <label className="col-sm-4">Nome Vice prefeita</label>
+                  <label className="col-sm-4">{candidatoPrefeito.nomeVice}</label>
                 </div>
                 <hr/>
                 <div className="info">
@@ -59,10 +70,10 @@ const PrefeitoContainer = ({
                     <strong>CORRIGE</strong> para <strong>RENICIAR</strong> este voto
                   </p>
                 </div>
-                <ButtonsUrna confirm={confirm} correction={() => correction('prefeito')}/>
 
               </>
              }
+            <ButtonsUrna error={error || noPreenchido}  confirm={() => confirm('prefeito')} correction={() => correction('prefeito')} annulment={annulment}/>
           </div>
         </div>
       </div>

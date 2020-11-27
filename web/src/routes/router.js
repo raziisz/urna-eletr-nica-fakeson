@@ -13,8 +13,8 @@ export default function Routes() {
           <Switch>
             <Route path="/" exact component={Home}/>
             <Route path="/login" component={Login} />
-            <Route path="/admin" exact component={Admin} />
-            <Route path="/admin/candidate" component={CandidateForm} />
+            <PrivateRouter path="/admin" exact component={Admin} />
+            <PrivateRouter path="/admin/candidate" component={CandidateForm} />
             <Route path='*' exact component={() => <h1>Página não encontrada.</h1>} />
           </Switch>
         </BrowserRouter>

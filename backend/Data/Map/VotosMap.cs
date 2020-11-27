@@ -20,6 +20,11 @@ namespace backend.Data.Map
           .HasColumnType("varchar(250)")
           .IsRequired();
 
+       builder.Property(x => x.Type)
+                .HasColumnName("type")
+                .HasColumnType("smallint")
+                .IsRequired();
+
       builder.Property(x => x.DataVotacao)
           .HasColumnName("data_votacao")
           .HasColumnType("datetime");
@@ -32,7 +37,11 @@ namespace backend.Data.Map
           .HasColumnType("tinyint")
           .HasDefaultValue(0);
 
-        builder.HasOne(x => x.Candidato).WithMany(x => x.VotosRecebidos);
+      builder
+        .HasOne(x => x.Candidato)
+        .WithMany(x => x.VotosRecebidos)
+        .OnDelete(DeleteBehavior.SetNull);
+
     }
   }
 }
