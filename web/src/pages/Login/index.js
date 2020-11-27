@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import './styles.css';
@@ -18,9 +18,7 @@ const Login = () => {
     useEffect(() => {
         
         if (document.referrer) {
-            console.log('prera', baseURLFront)
             let data = document.referrer.replace(baseURLFront, "");
-            console.log(data);
             setPrev(data);
         }
 
@@ -72,7 +70,7 @@ const Login = () => {
         <>
             <Loading  load={loading}/>
             <section className="container">
-                <h1 className="mt-4">Painel Eleições 2020</h1>
+                <Link className="mt-4 title-eleicao" to="/">Painel Eleições 2020</Link>
                 <div className="row">
                     <form className="card p-4 mt-5 col-5" onSubmit={handleSubmit}> 
                         <h2 className="pl-3 pt-3">Painel para administradores.</h2>

@@ -1,0 +1,27 @@
+#page-canvas .card .row-border {
+  border-radius: 5px;
+}
+
+#page-canvas main .card {
+  max-width: 1200px;
+}
+
+#page-canvas .card .row-border  div {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#page-canvas main .title-admin {
+  color: #689425;
+  font-weight: bold;
+}
+#page-canvas main div .seta {
+  cursor: pointer;
+
+}
+
+#page-canvas main div .seta:hover {
+  text-decoration: none;
+}
+
+

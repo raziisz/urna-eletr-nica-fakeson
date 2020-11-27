@@ -1,14 +1,15 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import PrefeitoContainer from './PrefeitoContainer';
-import VereadorContainer from './VereadorContainer';
 import './styles.css'
 import ConfirmSound from 'assets/sounds/confirmar.mp3';
 import Logo from 'assets/images/logo_eleicao.png';
-import Loading from 'components/Loading';
 
 import api from 'services/api';
 
+import Loading from 'components/Loading';
+import PrefeitoContainer from './PrefeitoContainer';
+import VereadorContainer from './VereadorContainer';
 
 const Home = () => {
   const [step, setStep] = useState(0);
@@ -33,7 +34,7 @@ const Home = () => {
   
   const confirmRef = useRef(null);
   
-  
+  const history = useHistory();
   useEffect(() => {
     if (step === 1) {
       digitMayor1.current.focus();
@@ -165,47 +166,51 @@ const Home = () => {
     confirmRef.current.play();
     setComplement(false);
     if (type === 'prefeito') {
-      setValuesMayor(["",""]);
-
+      
       try {
-        let id = candidatoPrefeito.id || 0;
+        let id = candidatoPrefeito.id || null;
+        let tipo = candidatoPrefeito.tipoCandidato || 1;
+        let isNulo = id === null;
         setLoading(true);
-        const result = await api.post('api/v1/vote/PostVote', { candidatoId: id, type: candidatoPrefeito.tipoCandidato});
-
+        const result = await api.post('api/v1/vote/PostVote', { candidatoId: id, type:tipo, isNulo});
+        
         if (result.status === 201) {
           setStep(prev => prev + 1);
         }
       } catch (error) {
         if (error.response) {
           if (error.response.status === 500) {
-              toast.error(error.response.data.message);
+            toast.error(error.response.data.message);
           }
         } else {
-            toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
+          toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
         }
       } finally {
         setLoading(false);
+        setValuesMayor(["",""]);
       }
     } else if (type === 'vereador') {
-      setValuesVereador(["","", "", "", ""]);
-
+      
       try {
-        let id = candidatoVereador.id || 0;
+        let id = candidatoVereador.id || null;
+        let tipo = candidatoVereador.tipoCandidato || 2;
+        let isNulo = id === null;
         setLoading(true);
-        const result = await api.post('api/v1/vote/PostVote', { candidatoId: id, type: candidatoVereador.tipoCandidato});
-
+        const result = await api.post('api/v1/vote/PostVote', { candidatoId: id, type: tipo, isNulo});
+        
         if (result.status === 201) {
           setStep(prev => prev + 1);
         }
       } catch (error) {
         if (error.response) {
           if (error.response.status === 500) {
-              toast.error(error.response.data.message);
+            toast.error(error.response.data.message);
           }
         } else {
-            toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
+          toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
         }
       } finally {
+        setValuesVereador(["","", "", "", ""]);
         setLoading(false);
       }
 
@@ -300,7 +305,10 @@ const Home = () => {
         <img src={Logo} alt="Eleições 2020" className="logo"/>
         <h1>Seja bem vindo cidadão.</h1>
         <p>Seja inteligente vote consciente!</p>
-        <button className="btn btn-primary" onClick={() => setStep(prev => prev+1)}>Iniciar</button>
+        <div className="buttons">
+          <button className="btn btn-primary mr-2" onClick={() => setStep(prev => prev+1)}>Iniciar</button>
+          <button className="btn btn-secondary" onClick={() => history.push('/apuracao')}>Ver Apuração</button>
+        </div>
       </div>
     }
     {step === 1 &&

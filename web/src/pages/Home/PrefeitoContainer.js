@@ -73,7 +73,7 @@ const PrefeitoContainer = ({
 
               </>
              }
-            <ButtonsUrna error={error || noPreenchido}  confirm={() => confirm('prefeito')} correction={() => correction('prefeito')} annulment={annulment}/>
+            <ButtonsUrna  confirm={() => confirm('prefeito')} correction={() => correction('prefeito')} annulment={annulment}/>
           </div>
         </div>
       </div>

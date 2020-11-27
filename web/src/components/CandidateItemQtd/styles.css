@@ -1,0 +1,12 @@
+#page-canvas .card .row-border-child {
+  border-bottom: 1px solid #333;
+  border-left: 1px solid #333;
+  border-right: 1px solid #333;
+  border-radius: 5px;
+}
+
+#page-canvas .card .row-border-child div {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
