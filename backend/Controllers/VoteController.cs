@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.Helpers;
 using backend.Models;
@@ -11,7 +13,7 @@ namespace backend.Controllers
 {
   [ApiController]
   [Route("api/v1/[controller]")]
-  [Authorize]
+  [AllowAnonymous]
   public class VoteController : ControllerBase
   {
     private readonly IVotoRepository repo;
@@ -24,7 +26,7 @@ namespace backend.Controllers
       this.repo = repo;
     }
 
-    [AllowAnonymous]
+
     [HttpPost("PostVote")]
     public async Task<IActionResult> Store([FromBody] Voto voto)
     {
@@ -47,14 +49,26 @@ namespace backend.Controllers
     [HttpGet("GetVotos")]
     public async Task<IActionResult> Index([FromQuery] VotesParams vp)
     {
-      var votes = await repo.GetVotos(vp);
-      var nulls = await repo.GetCountVotosNulos();
+      ICollection<Candidato> votes = new List<Candidato>();
+      ICollection<Voto> nulls = new List<Voto>();
+      ICollection<Voto> brancos = new List<Voto>();
+      
+      if (vp.Type < 3) {
+        votes = await repo.GetVotos(vp);
+        nulls = await repo.GetCountVotosNulos();
+        brancos = await repo.GetCountVotosBrancos();
 
-      Response.AddPagination(votes.CurrentPage, votes.PageSize, votes.TotalCount, votes.TotalPages);
+      } else if (vp.Type == 3) {
+        nulls = await repo.GetCountVotosNulos();
+        brancos = await repo.GetCountVotosBrancos();
+
+      }
+
 
       return Ok(new {
-          votes = votes.ToArray(),
-          nulls
+          votes,
+          nulls,
+          brancos
       });
     }
 

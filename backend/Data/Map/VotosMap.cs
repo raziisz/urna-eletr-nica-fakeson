@@ -21,9 +21,14 @@ namespace backend.Data.Map
           .IsRequired();
 
        builder.Property(x => x.Type)
-                .HasColumnName("type")
-                .HasColumnType("smallint")
-                .IsRequired();
+          .HasColumnName("type")
+          .HasColumnType("smallint")
+          .IsRequired();
+      
+      builder.Property(x => x.IsNulo)
+          .HasColumnName("is_nulo")
+          .HasColumnType("tinyint")
+          .HasDefaultValue(0);
 
       builder.Property(x => x.DataVotacao)
           .HasColumnName("data_votacao")

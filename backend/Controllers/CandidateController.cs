@@ -109,7 +109,7 @@ namespace backend.Controllers
         return BadRequest(new { message = "Candidato não pode ficar sem foto! Favor inserir" });
       }
       if (candidatoNewDto.TipoCandidato == 1 && candidatoNewDto.FotoVice == null) {
-        return BadRequest(new { message = "Vice não ficar sem foto! Favor inserir" });
+        return BadRequest(new { message = "Vice não pode ficar sem foto! Favor inserir" });
       }
 
       await repo.AddCandidato(candidatoNewDto);

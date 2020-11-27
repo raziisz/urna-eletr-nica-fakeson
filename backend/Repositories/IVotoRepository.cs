@@ -8,7 +8,8 @@ namespace backend.Repositories
     public interface IVotoRepository
     {
         Task AddVoto(Voto voto);
-        Task<PagedList<Candidato>> GetVotos(VotesParams vp);
-        Task<int> GetCountVotosNulos();
+        Task<ICollection<Candidato>> GetVotos(VotesParams vp);
+        Task<ICollection<Voto>> GetCountVotosNulos();
+        Task<ICollection<Voto>> GetCountVotosBrancos();
     }
 }

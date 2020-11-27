@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace backend.Migrations
 {
-    public partial class new_migr : Migration
+    public partial class isnull : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,6 +54,8 @@ namespace backend.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     data_votacao = table.Column<DateTime>(type: "datetime", nullable: false),
                     codigo_votacao_cidadao = table.Column<string>(type: "varchar(250)", nullable: false),
+                    type = table.Column<short>(type: "smallint", nullable: false),
+                    is_nulo = table.Column<sbyte>(type: "tinyint", nullable: false, defaultValue: (sbyte)0),
                     candidato_id = table.Column<int>(nullable: true),
                     deleted = table.Column<sbyte>(type: "tinyint", nullable: false, defaultValue: (sbyte)0)
                 },

@@ -9,8 +9,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201127124354_new_migr")]
-    partial class new_migr
+    [Migration("20201127212021_isnull")]
+    partial class isnull
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,6 +136,16 @@ namespace backend.Migrations
                         .HasColumnName("deleted")
                         .HasColumnType("tinyint")
                         .HasDefaultValue((sbyte)0);
+
+                    b.Property<sbyte>("IsNulo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("is_nulo")
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((sbyte)0);
+
+                    b.Property<short>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id");
 

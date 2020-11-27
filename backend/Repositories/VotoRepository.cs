@@ -21,27 +21,34 @@ namespace backend.Repositories
       await context.Votos.AddAsync(voto);
     }
 
-    public async Task<PagedList<Candidato>> GetVotos(VotesParams vp)
+    public async Task<ICollection<Candidato>> GetVotos(VotesParams vp)
     {
-      var query = context.Candidatos
+      var candidatos = context.Candidatos
           .Where(x => !x.Deleted)
+          .Include(x => x.VotosRecebidos)
           .OrderByDescending(x => x.NomeCompleto)
           .AsNoTracking()
           .AsQueryable();
 
       if (vp.Type == 1) {
-        query = query.Where(x => x.TipoCandidato == 1);
+        candidatos = candidatos.Where(x => vp.Type == x.TipoCandidato);
       } else if (vp.Type == 2) {
-        query = query.Where(x => x.TipoCandidato == 2);
-      } 
+        candidatos = candidatos.Where(x => vp.Type == x.TipoCandidato);
+      }
 
-      return await PagedList<Candidato>.CreateAsync(query, vp.PageNumber, vp.PageSize);
+      return await candidatos.ToListAsync();
     }
 
-    public async  Task<int> GetCountVotosNulos()
+    public async  Task<ICollection<Voto>> GetCountVotosNulos()
     {
-      var votesNull = await context.Votos.Where(x => !x.Deleted && x.CandidatoId == null).ToListAsync();
-      return votesNull.Count;
+      var votesNull = await context.Votos.Where(x => !x.Deleted && x.IsNulo).ToListAsync();
+      return votesNull;
+    }
+
+    public async Task<ICollection<Voto>> GetCountVotosBrancos()
+    {
+      var votesBrancos = await context.Votos.Where(x => !x.Deleted && x.CandidatoId == null && !x.IsNulo).ToListAsync();
+      return votesBrancos;
     }
   }
 }

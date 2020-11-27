@@ -135,6 +135,12 @@ namespace backend.Migrations
                         .HasColumnType("tinyint")
                         .HasDefaultValue((sbyte)0);
 
+                    b.Property<sbyte>("IsNulo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("is_nulo")
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((sbyte)0);
+
                     b.Property<short>("Type")
                         .HasColumnName("type")
                         .HasColumnType("smallint");
