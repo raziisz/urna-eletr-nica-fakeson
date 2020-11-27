@@ -7,6 +7,20 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 [Git](https://git-scm.com), [.Net Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1), [Node.js](https://nodejs.org/en/), [MySql8.0](https://dev.mysql.com/downloads/mysql/). 
 Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
 
+<h4 align="center"> 
+	🚧  Web and API 🚀 Em construção...  🚧
+</h4>
+
+### Features
+
+- [x] Cadastro de candidatos
+- [x] Edição de candidatos
+- [x] Exclusão de candidatos
+- [x] Votação
+- [x] Painel admin e login
+- [x] Dashboard de apuração
+- [] ...
+
 ### 🎲 Baixando projeto pelo git
 
 ```bash
