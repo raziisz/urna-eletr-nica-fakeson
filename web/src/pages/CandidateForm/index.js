@@ -244,7 +244,7 @@ const CandidateForm = () => {
           />
           <InputText
             classList="form-control-file"  
-            label={"Foto candidato "+ values.id ? "" : "*"} 
+            label={ values.id ? "Foto candidato" : "Foto candidato *"} 
             type="file"
             onChange={e => handleChange(e)}
             name="fotoCandidato"
@@ -261,7 +261,7 @@ const CandidateForm = () => {
             values.tipoCandidato == 1 &&
               <InputText
                 classList="form-control-file" 
-                label={"Foto do vice "+ values.id ? "" : "*"}
+                label={values.id ? "Foto vice" : "Foto vice *"}
                 type="file"
                 onChange={e => handleChange(e)}
                 name="fotoVice"
