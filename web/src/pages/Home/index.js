@@ -347,7 +347,7 @@ const Home = () => {
     }
     {
       step === 3 &&
-        <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
+        <div className="d-flex flex-column justify-content-center align-items-center align-content-center content mb-5 p-5">
           <div className="card">
             <div className="card-body">
               <h1 className="title-end">FIM</h1>

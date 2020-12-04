@@ -29,7 +29,7 @@ const VereadorContainer = ({
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center align-content-center content">
-        <div className="card w-50">
+        <div className="card w-75">
           <div className="card-body d-flex flex-column">
             <h4>Meu voto para</h4>
             <h2 className="mt-2 align-self-center">VEREADOR(A)</h2>

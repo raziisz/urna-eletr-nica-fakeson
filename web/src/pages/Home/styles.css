@@ -1,5 +1,5 @@
 .content {
-  height: 90vh;
+  height: 85vh;
 }
 
 .content p {
@@ -26,7 +26,8 @@
   width: 180px;
   height: 140px;
   align-self: flex-end;
-  top: -50
+  top: -50;
+
 }
 
 .content .card .image-candidate img {

@@ -27,7 +27,7 @@ export default () => {
         setNulos(response.data.nulls);
       })
       .catch(error => {
-        if (error.response.status === 500) {
+        if (error?.response?.status === 500) {
           toast.error(error.response.data.message);
         } else {
           toast.error('Ops! Sem conexão com a base de dados.\n Tente novamente em alguns instantes.');
@@ -154,7 +154,7 @@ export default () => {
                   {votoPrefeitoBrancos}
                 </div>
                 <div className="col-sm-3">
-                  {votoVereadorNulos}
+                  {votoVereadorBrancos}
                 </div>
                 <div className="col-sm-3">
                   {votoPrefeitoNulos}
